@@ -1,5 +1,5 @@
 # SME-informal-sector-colombia
-PP422 WT Term Group Final Project 
+PP422 WT Term - Group Final Project 
 
 LSE MPA in Data Science for Public Policy Y1
 
