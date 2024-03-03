@@ -27,5 +27,6 @@ Enumerate the codes and folders in a consistent way. All sub-folders, scripts an
 
 Example: 
 
-Scripts: "01_initial-settings.py", "02_clean-survey-data.py", "03_migrant-profile.py".
-Output dataset: "03_summary-migrant-profile-region.xlsx"
+  Scripts: "01_initial-settings.py", "02_clean-survey-data.py", "03_migrant-profile.py".
+
+  Output dataset: "03_summary-migrant-profile-region.xlsx"
