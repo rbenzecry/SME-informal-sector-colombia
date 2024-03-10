@@ -32,3 +32,31 @@ Example:
   Scripts: "01_initial-settings.py", "02_clean-survey-data.py", "03_migrant-profile.py".
 
   Output dataset: "03_summary-migrant-profile-region.xlsx"
+  
+  
+### 01 - Microbusinesses survey
+
+
+### 02 - Household surveys
+
+Folder: 02_household-surveys
+
+We use the data of the national household surveys of Colombia to analyse the profile of migrants and informal sectors workers.
+
+Historic data from: 
+
+DANE. Gran Encuesta Integrada de Hogares - GEIH
+(https://www.datos.gov.co/Estad-sticas-Nacionales/Gran-Encuesta-Integrada-de-Hogares-GEIH/mcpt-3dws/about_data)
+
+
+GEIH 2023:
+
+https://microdatos.dane.gov.co/index.php/catalog/782/get-microdata
+
+GEIH 2022:
+
+
+
+
+
+
