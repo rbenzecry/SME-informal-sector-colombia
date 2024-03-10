@@ -73,8 +73,12 @@ table(list_data$Julio$SECUENCIA_P == list_data$Julio$HOGAR)
 
 list_data$Julio %>% 
   # Gen new column pasting id suspects
-  mutate(id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""),
-         id_house = paste(DIRECTORIO, HOGAR, sep = "")) %>% 
+  # DIRECTORIO identifies Vivienda
+  # SECUENCIA_P identifies the household (hogar)
+  # ORDER identifies people
+  # HOGAR: numero que identifica la posición del hogar dentro de la vivienda
+  mutate(id_person = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = ""),
+         id_house = paste(DIRECTORIO, SECUENCIA_P, sep = "")) %>% 
   .$id_person %>%
   unique() %>% 
   length()
@@ -90,6 +94,16 @@ migration_2023 <- bind_rows(list_data) %>%
          id_house = paste(DIRECTORIO, HOGAR, sep = ""),
          id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""))
 
+# Number of households
+length(unique(migration_2023$id_house))
+# Number of people
+length(unique(migration_2023$id_person))
+
+
+list_data$Enero %>% 
+  # filter(ORDEN == 1) %>% 
+  .$FEX_C18 %>% 
+  sum()
 
 # -------------------------------------------------------------------------
 
