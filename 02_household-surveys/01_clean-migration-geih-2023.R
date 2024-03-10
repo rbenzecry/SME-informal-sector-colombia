@@ -62,10 +62,34 @@ for (i in 1:length(list_data)){
 }
 
 
+# EXPLORATION -------------------------------------------------------------
+
+# Identify unique identifier of household and person
+nrow(list_data$Julio)
+length(unique(list_data$Julio$DIRECTORIO))
+
+# HOGAR and SECUENCIA_P are the same
+table(list_data$Julio$SECUENCIA_P == list_data$Julio$HOGAR)
+
+list_data$Julio %>% 
+  # Gen new column pasting id suspects
+  mutate(id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""),
+         id_house = paste(DIRECTORIO, HOGAR, sep = "")) %>% 
+  .$id_person %>%
+  unique() %>% 
+  length()
+
 # MERGE -------------------------------------------------------------------
 
-migration_2023 <- bind_rows(list_data) %>% 
-  mutate(P3373S1 = na_if(P3373S1, "."))
+migration_2023 <- bind_rows(list_data) %>%
+  
+  # Correct a specific column
+  mutate(P3373S1 = na_if(P3373S1, "."),
+         
+         # Generate household and person unique IDs
+         id_house = paste(DIRECTORIO, HOGAR, sep = ""),
+         id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""))
+
 
 # -------------------------------------------------------------------------
 
