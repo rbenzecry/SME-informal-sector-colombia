@@ -35,7 +35,9 @@ Example:
   
   
 ### 01 - Microbusinesses survey
+Folder: 01_emicron
 
+In the data folder, have another folder called: 01_to_import. Plus, have the file emicron_clean.csv which can be downloaded by running the file 01_cleaning-data-undp.ipynb.
 
 ### 02 - Household surveys
 
