@@ -22,17 +22,7 @@ vector_files <- paste(initial_dir, months, final_dir, sep = "")
 list_data <- lapply(X = vector_files, FUN = read_dta)
 names(list_data) <- months
 
-dictionary <- read_excel("Data/GEIH-2023/DICCIONARIO_DATOS_BASES_ANONIMIZADAS_GEIH_2023.xlsx",
-                         sheet = "migration_module")
-
-
 # SET UP ------------------------------------------------------------------
-
-dictionary <- dictionary %>% 
-  clean_names() %>% 
-  mutate(across(.cols = everything(),
-                .fns = function(x) trimws(x, which = "both")))
-
 
 # Determine col types for each column of each data set
 col_types <- lapply(list_data, 
@@ -62,7 +52,7 @@ col_convert <- col_types %>%
   .$column
 
 
-# COnvert columns in every data set
+# Convert columns in every data set
 for (i in 1:length(list_data)){
   
   list_data[[i]] <- list_data[[i]] %>% 
@@ -70,6 +60,21 @@ for (i in 1:length(list_data)){
                   .fns = as.character))
   
 }
+
+
+# MERGE -------------------------------------------------------------------
+
+migration_2023 <- bind_rows(list_data) %>%
+  
+  # Correct a specific column
+  mutate(P3373S1 = na_if(P3373S1, "."),
+         
+         # Generate household and person unique IDs
+         id_house = paste(DIRECTORIO, HOGAR, sep = ""),
+         id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""),
+         
+         # Adjusting monthly weights to the year
+         adj_weight = FEX_C18/12)
 
 
 # EXPLORATION -------------------------------------------------------------
@@ -93,49 +98,22 @@ list_data$Julio %>%
   unique() %>% 
   length()
 
-# MERGE -------------------------------------------------------------------
-
-migration_2023 <- bind_rows(list_data) %>%
-  
-  # Correct a specific column
-  mutate(P3373S1 = na_if(P3373S1, "."),
-         
-         # Generate household and person unique IDs
-         id_house = paste(DIRECTORIO, HOGAR, sep = ""),
-         id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""),
-         
-         # Adjusting monthly weights to the year
-         adj_weight = FEX_C18/12)
-
-
-# EXPLORE
-# Number of households
+# Total number of households
 length(unique(migration_2023$id_house))
-# Number of people
+# Total number of people
 length(unique(migration_2023$id_person))
 
-
+# Weighted total number of people
 list_data$Enero %>% 
   # filter(ORDEN == 1) %>% 
   .$FEX_C18 %>% 
   sum()
 
 
-# RENAME COLUMNS ----------------------------------------------------------
+# Adjusted weighted total number of people
+migration_2023 %>% 
+  summarise(sum(adj_weight))
 
-var_names <- as_tibble(colnames(migration_2023)) %>% 
-  left_join(dictionary,
-             by = c("value" = "original")) %>% 
-  mutate(final_name = ifelse(is.na(var_name),
-                             yes = value, no = var_name))
-
-
-migration_2023 <- migration_2023 %>% 
-  set_names(var_names$final_name)
-
-# EXPORT ------------------------------------------------------------------
-
-# write_dta("Tables/02_household-surveys/01_migration-2023-clean.dta")
 
 # -------------------------------------------------------------------------
 
