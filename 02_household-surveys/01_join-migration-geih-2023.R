@@ -70,8 +70,8 @@ migration_2023 <- bind_rows(list_data) %>%
   mutate(P3373S1 = na_if(P3373S1, "."),
          
          # Generate household and person unique IDs
-         id_house = paste(DIRECTORIO, HOGAR, sep = ""),
-         id_person = paste(DIRECTORIO, HOGAR, ORDEN, sep = ""),
+         id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
+         id_person = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = ""),
          
          # Adjusting monthly weights to the year
          adj_weight = FEX_C18/12)
@@ -116,5 +116,3 @@ migration_2023 %>%
 
 
 # -------------------------------------------------------------------------
-
-
