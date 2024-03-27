@@ -32,7 +32,8 @@ export_files <- c("individual",
                   "non-occupied",
                   "occupied",
                   "other-work",
-                  "other-income-taxes")
+                  "other-income-taxes",
+                  "research-type")
 
 # Full paths to export
 export_paths <- paste("Tables/02_household-surveys/",
@@ -63,10 +64,14 @@ for (n in 1:length(final_dir)){
   # (1) Sapply gets the dimensions of each data set, (2) the second row has the number of columns, 
   # (3) we extract the index of the data frame in the list and use it to just take the columns that
   # appear en every dataset
-  i_min <- which.min(sapply(list_data, dim)[2,])
-  common_cols <- colnames(list_data$Enero)[(colnames(list_data$Enero) %in% colnames(list_data[[i_min]]))]
-  # Specific removal
-  common_cols <- setdiff(common_cols, "pt")
+  # i_min <- which.min(sapply(list_data, dim)[2,])
+  # common_cols <- colnames(list_data$Enero)[(colnames(list_data$Enero) %in% colnames(list_data[[i_min]]))]
+  # # Specific removal
+  # common_cols <- setdiff(common_cols, "pt")
+  
+  # Take the intersection of all columns
+  common_cols <- Reduce(intersect, lapply(list_data, colnames))
+  
   
   # Keep only the common columns every month
   list_data <- lapply(list_data,
