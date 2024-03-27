@@ -11,13 +11,17 @@ rm(list = ls())
 
 # DATA --------------------------------------------------------------------
 
-initial_dir <- "Data/GEIH-2023/"
-all_modules <- list.files("Data/GEIH-2023/Enero/DTA")
-final_dir <- paste("/DTA/", all_modules, sep = "")
-
 months <- c("Enero", "Febrero", "Marzo", "Abril",
             "Mayo", "Junio", "Julio", "Agosto", 
             "Septiembre", "Octubre", "Noviembre", "Diciembre")
+
+survey_year <- "2022"
+initial_dir <- paste0("Data/GEIH-", survey_year, "/")
+
+# Get names of all modules
+all_modules <- list.files(paste0(initial_dir, "Enero/DTA"))
+final_dir <- paste("/DTA/", all_modules, sep = "")
+
 
 
 # Prepare the names of the files to export
@@ -33,7 +37,8 @@ export_files <- c("individual",
 # Full paths to export
 export_paths <- paste("Tables/02_household-surveys/",
                       export_files,
-                      "_geih-2023-clean.dta", sep = "")
+                      "_geih-", survey_year,
+                      "-clean.dta", sep = "")
 
 
 # START OF THE LOOP
@@ -54,9 +59,14 @@ for (n in 1:length(final_dir)){
   # SET UP ------------------------------------------------------------------
   
   
-  # Determine common columns across all months
-  common_cols <- colnames(list_data$Enero)[(colnames(list_data$Enero) %in% colnames(list_data$Junio))]
-  
+  # Determine common columns across all months:
+  # (1) Sapply gets the dimensions of each data set, (2) the second row has the number of columns, 
+  # (3) we extract the index of the data frame in the list and use it to just take the columns that
+  # appear en every dataset
+  i_min <- which.min(sapply(list_data, dim)[2,])
+  common_cols <- colnames(list_data$Enero)[(colnames(list_data$Enero) %in% colnames(list_data[[i_min]]))]
+  # Specific removal
+  common_cols <- setdiff(common_cols, "pt")
   
   # Keep only the common columns every month
   list_data <- lapply(list_data,
@@ -118,6 +128,9 @@ for (n in 1:length(final_dir)){
   write_dta(annual_data, 
             export_paths[[n]])
   
+  # Progress report
+  print(paste("Finished module:", module))
+  print(paste(n, "of", length(final_dir)))
   
 }
 
