@@ -1,0 +1,127 @@
+---
+title: "Merge EMICRON-GEIH 2022"
+author: "Ricardo Benzecry"
+date: "2024-04-02"
+output: html_document
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(haven)
+library(janitor)
+library(data.table)
+library(sjlabelled)
+library(sjPlot)
+```
+
+### Data
+
+```{r}
+rm(list = ls())
+
+emicron <- read.csv("Tables/01_emicron/emicron_clean.csv")
+
+migration <- read_dta("Tables/02_household-surveys/migration_geih-2022-clean.dta")
+
+
+```
+
+#### Number of rows in EMICRON
+```{r}
+nrow(emicron)
+```
+
+#### Checking character length of variables for matching
+```{r}
+table(sapply(emicron$DIRECTORIO, nchar))
+table(sapply(migration$DIRECTORIO, nchar))
+
+table(sapply(emicron$SECUENCIA_P, nchar))
+table(sapply(migration$SECUENCIA_P, nchar))
+
+table(sapply(emicron$SECUENCIA_ENCUESTA, nchar))
+table(sapply(migration$ORDEN, nchar))
+```
+### Merge data sets
+
+
+```{r}
+merge_data <- emicron %>% 
+  
+  # Drop columns to make it faster
+  select(DIRECTORIO, SECUENCIA_P, SECUENCIA_ENCUESTA, COD_DEPTO) %>% 
+  
+  left_join(select(migration, 
+                   DIRECTORIO, SECUENCIA_P, ORDEN, DPTO),
+            
+            by = c("DIRECTORIO" = "DIRECTORIO", 
+                   "SECUENCIA_P" = "SECUENCIA_P",
+                   "SECUENCIA_ENCUESTA" = "ORDEN")) 
+
+```
+
+Percentage of observations that don't have data on GEIH:
+
+```{r}
+mean(is.na(merge_data$DPTO)) * 100
+```
+
+
+### Explore merge
+
+
+Check if DIRECTORIO is the problem:
+
+```{r}
+table(emicron$DIRECTORIO %in% migration$DIRECTORIO)
+```
+
+
+Add binary variable if DIRECTORIO is in GEIH to look for patterns:
+```{r}
+emicron <- emicron %>% 
+  mutate(dir_geih = as.numeric(DIRECTORIO %in% migration$DIRECTORIO)) 
+```
+
+
+### Non-missing DIRECTORIO per department (DPTO)
+
+```{r}
+# Plot percentage of DIRECTORIOs by depto
+emicron %>% 
+  select(DIRECTORIO, COD_DEPTO, dir_geih) %>% 
+  group_by(COD_DEPTO) %>% 
+  summarise(pctg_no_na = mean(dir_geih)) %>% 
+  ungroup() %>% 
+  
+  ggplot() +
+  geom_col(aes(as.factor(COD_DEPTO), pctg_no_na),
+           fill = "lightblue") +
+  ylim(0, 1) +
+  coord_flip() +
+  theme_classic()
+```
+
+### Non-missing DIRECTORIO per month (MES_REF)
+
+```{R}
+
+emicron %>% 
+  select(DIRECTORIO, MES_REF, dir_geih) %>% 
+  group_by(MES_REF) %>% 
+  summarise(pctg_no_na = mean(dir_geih)) %>% 
+  ungroup() %>% 
+  
+  ggplot() +
+  geom_col(aes(MES_REF, pctg_no_na),
+           fill = "lightblue") +
+  ylim(0, 1) +
+  coord_flip() +
+  theme_classic()
+```
+
+Emicron's January observations do not have data on GEIH 2022. 
+
+
+### THE END
