@@ -9,7 +9,6 @@ library(sjPlot)
 
 rm(list = ls())
 
-
 # DATA --------------------------------------------------------------------
 
 # Define the common columns to read from every module
@@ -111,29 +110,4 @@ labour_force <- occupied_raw %>%
          mpi_inf_work = as.numeric(inf_work_ratio > 0))
 
 
-# OTHER -------------------------------------------------------------------
-
-
-occupied <- occupied_raw %>% 
-  group_by(id_house) %>% 
-  summarise(n_occupied = n(),
-            per_weight = sum(adj_weight),
-            house_weight = mean(adj_weight),
-            period = unique(PERIODO)) %>% 
-  ungroup()
-
-
-labour_force <- labour_force_raw %>% 
-  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
-  # Activity last week: working or looking for a job
-  mutate(pea = ifelse(P6240 == 1 | P6240 == 2,
-                      yes = 1, no = 0)) %>% 
-  group_by(id_house) %>% 
-  summarise(n_pea = sum(pea),
-            per_weight = sum(pea*adj_weight),
-            house_weight = mean(adj_weight)) %>% 
-  ungroup()
-
-
-
-
+# -------------------------------------------------------------------------
