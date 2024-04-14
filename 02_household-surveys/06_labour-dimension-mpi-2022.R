@@ -45,7 +45,9 @@ labour_force_raw <- read_dta("Tables/02_household-surveys/workforce_geih-2022-cl
   rename(main_activity = P6240)
 
 
-# EXPLORE -----------------------------------------------------------------
+
+# SANITY CHECKS -----------------------------------------------------------
+
 
 # Contrasted results with:
 # https://www.dane.gov.co/files/investigaciones/boletines/ech/ech/pres_ext_empleo_dic_22.pdf
