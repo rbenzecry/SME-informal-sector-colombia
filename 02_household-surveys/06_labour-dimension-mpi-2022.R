@@ -7,7 +7,7 @@ library(data.table)
 library(sjlabelled)
 library(sjPlot)
 
-rm(list = ls())
+# rm(list = ls())
 
 # DATA --------------------------------------------------------------------
 
