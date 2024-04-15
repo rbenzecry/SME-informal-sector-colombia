@@ -44,13 +44,13 @@ id_cols <- c("id_house", "adj_weight",
 # MPI INDICATORS ----------------------------------------------------------
 
 # Housing and services dimension
-source("02_household-surveys/08_house-and-services-mpi-2022.R")
+source("02_household-surveys/00_house-and-services-mpi-2022.R")
 
 # Labour dimension
-source("02_household-surveys/06_labour-dimension-mpi-2022.R")
+source("02_household-surveys/00_labour-mpi-2022.R")
 
 # Education and health dimensions
-source("02_household-surveys/08_education-health-mpi-2022.R")
+source("02_household-surveys/00_education-health-mpi-2022.R")
 
 # JOIN DATA SETS ----------------------------------------------------------
 
