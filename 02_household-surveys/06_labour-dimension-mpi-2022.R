@@ -41,41 +41,39 @@ labour_force_raw %>%
 
 # OCCUPIED
 occupied <- occupied_raw %>%
-  # Create id variables again
   mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
          id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
-  # FILTER FOR ONLY THOSE IN EMICRON
-  filter(id_per %in% emicron$id_per) %>% 
+  
+  # FILTER FOR ONLY THOSE HOUSEHOLDS IN EMICRON
+  filter(id_house %in% emicron$id_house) %>% 
   
   rename(pension_fund = P6920) %>% 
   
   mutate(occupied = 1) 
 
 
+
 # LABOUR FORCE
 labour_force <- labour_force_raw %>% 
   mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
          id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
-  # FILTER FOR ONLY THOSE IN EMICRON
-  filter(id_per %in% emicron$id_per) %>% 
+  # FILTER FOR ONLY THOSE HOUSEHOLDS IN EMICRON
+  filter(id_house %in% emicron$id_house) %>% 
   
-  rename(main_activity = P6240)
+  rename(main_activity = P6240) %>% 
 
 
 # LABOUR DIMENSION VARIABLES ----------------------------------------------
 
-labour_force <- occupied %>% 
-  
   # Add occupied variables to labour force data frame
-  right_join(labour_force) %>% 
+  left_join(occupied) %>% 
   
   # Occupied and NOT affiliated to a pension fund
   mutate(occu_no_pension = ifelse(occupied == 1 & pension_fund == 2,
                                   yes = 1, no = 0)) %>% 
   
   # Summarise at the household level
-  group_by(DPTO, AREA,
-           DIRECTORIO, SECUENCIA_P) %>% 
+  group_by(DPTO, AREA, DIRECTORIO, SECUENCIA_P, id_house) %>% 
   
   summarise(occu_weight = sum(occupied*adj_weight, na.rm = T),
             occu_np_weight = sum(occu_no_pension*adj_weight, na.rm = T),
@@ -89,7 +87,9 @@ labour_force <- occupied %>%
             house_weight = mean(adj_weight)) %>% 
   ungroup() %>% 
   
-  # Add number of people per household
+  
+  
+  # ADD HOUSEHOLD LEVEL DATA SET
   left_join(household) %>% 
   
   # Calculate indicators
@@ -104,5 +104,11 @@ labour_force <- occupied %>%
          mpi_eco_dep = as.numeric(eco_dep_ratio >= 3),
          mpi_inf_work = as.numeric(inf_work_ratio > 0))
 
+
+# CLEAN -------------------------------------------------------------------
+
+# Reduce occupied to only a vector of the IDs of those occupied to free space
+id_occupied <- occupied$id_per
+rm(occupied, household)
 
 # -------------------------------------------------------------------------
