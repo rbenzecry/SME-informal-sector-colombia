@@ -1,51 +1,17 @@
 
-library(tidyverse)
-library(readxl)
-library(haven)
-library(janitor)
-library(data.table)
-library(sjlabelled)
-library(sjPlot)
-
-# rm(list = ls())
-
 # DATA --------------------------------------------------------------------
 
-# Define the common columns to read from every module
-id_cols <- c("id_house", "adj_weight", 
-             "PERIODO", "MES",
-             "DIRECTORIO", "SECUENCIA_P", 
-             "HOGAR",
-             "CLASE",
-             "FEX_C18",
-             "DPTO", "AREA")
-
-
-# Household level module
-household <- read_dta("Tables/02_household-surveys/household_geih-2022-clean.dta",
-                      col_select = c(all_of(id_cols),
-                                     # Number or people in household
-                                     "P6008")) %>% 
-  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = "")) %>% 
-  rename(n_per = P6008)
-
-                                     
 # Occupied module
 occupied_raw <- read_dta("Tables/02_household-surveys/occupied_geih-2022-clean.dta",
                          col_select = c(all_of(id_cols), 
                                         "ORDEN",
-                                        # ¿Está … cotizando actualmente a un fondo de pensiones?
-                                        "P6920")) %>% 
-  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
-         id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
-  rename(pension_fund = P6920)
+                                        "P6920"))
 
 # Labour force/workforce module
 labour_force_raw <- read_dta("Tables/02_household-surveys/workforce_geih-2022-clean.dta",
-                             col_select = c(all_of(id_cols), "ORDEN",
-                                            "P6240")) %>% 
-  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = "")) %>% 
-  rename(main_activity = P6240)
+                             col_select = c(all_of(id_cols), 
+                                            "ORDEN",
+                                            "P6240"))
 
 
 
@@ -71,14 +37,37 @@ labour_force_raw %>%
   summarise(PEA = sum(FEX_C18)) 
 
 
+# SET UP ------------------------------------------------------------------
+
+# OCCUPIED
+occupied <- occupied_raw %>%
+  # Create id variables again
+  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
+         id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
+  # FILTER FOR ONLY THOSE IN EMICRON
+  filter(id_per %in% emicron$id_per) %>% 
+  
+  rename(pension_fund = P6920) %>% 
+  
+  mutate(occupied = 1) 
+
+
+# LABOUR FORCE
+labour_force <- labour_force_raw %>% 
+  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
+         id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
+  # FILTER FOR ONLY THOSE IN EMICRON
+  filter(id_per %in% emicron$id_per) %>% 
+  
+  rename(main_activity = P6240)
+
+
 # LABOUR DIMENSION VARIABLES ----------------------------------------------
 
-
-labour_force <- occupied_raw %>% 
-  mutate(occupied = 1) %>% 
+labour_force <- occupied %>% 
   
   # Add occupied variables to labour force data frame
-  right_join(labour_force_raw) %>% 
+  right_join(labour_force) %>% 
   
   # Occupied and NOT affiliated to a pension fund
   mutate(occu_no_pension = ifelse(occupied == 1 & pension_fund == 2,
@@ -87,6 +76,7 @@ labour_force <- occupied_raw %>%
   # Summarise at the household level
   group_by(DPTO, AREA,
            DIRECTORIO, SECUENCIA_P) %>% 
+  
   summarise(occu_weight = sum(occupied*adj_weight, na.rm = T),
             occu_np_weight = sum(occu_no_pension*adj_weight, na.rm = T),
             

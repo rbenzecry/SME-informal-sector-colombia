@@ -1,48 +1,37 @@
 
-
-library(tidyverse)
-library(readxl)
-library(haven)
-library(janitor)
-library(data.table)
-library(sjlabelled)
-library(sjPlot)
-
-# rm(list = ls())
-
 # DATA --------------------------------------------------------------------
-
-# Define the common columns to read from every module
-id_cols <- c("id_house", "adj_weight", 
-             "PERIODO", "MES",
-             "DIRECTORIO", "SECUENCIA_P", 
-             "HOGAR",
-             "CLASE",
-             "FEX_C18",
-             "DPTO", "AREA")
-
 
 # Household level module
 household_raw <- read_dta("Tables/02_household-surveys/household_geih-2022-clean.dta",
                           col_select = c(all_of(id_cols),
-                                     # Number or people per household
-                                     "P6008",
-                                     "P4030S5",
-                                     "P5050",
-                                     "P5020",
-                                     "P4020",
-                                     "P4010",
-                                     "P5010"))
+                                         "P6008",
+                                         "P4030S5",
+                                         "P5050",
+                                         "P5020",
+                                         "P4020",
+                                         "P4010",
+                                         "P5010")) %>% 
+  
+  
+# SET UP ------------------------------------------------------------------
 
+  mutate(id_house = paste(as.character(DIRECTORIO), 
+                          as.character(SECUENCIA_P), 
+                          sep = "")) %>% 
+  
+  # FILTER FOR ONLY THOSE IN EMICRON
+  filter(id_house %in% emicron$id_house)
+  
 
 # HOUSING AND SERVICES ----------------------------------------------------
 
-
 household <- household_raw %>% 
-  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = "")) %>% 
   
   # Rename all variables
-  rename(n_per = P6008,
+  select(all_of(id_cols),
+         id_house,
+         
+         n_per = P6008,
          water_source = P5050,
          excrete_disposal = P5020,
          floors = P4020,
