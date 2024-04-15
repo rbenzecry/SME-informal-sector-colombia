@@ -2,45 +2,44 @@
 # DATA --------------------------------------------------------------------
 
 # Occupied module
-occupied_raw <- read_dta("Tables/02_household-surveys/occupied_geih-2022-clean.dta",
+occupied <- read_dta("Tables/02_household-surveys/occupied_geih-2022-clean.dta",
+                     col_select = c(all_of(id_cols),
+                                    "ORDEN",
+                                    "P6920"))
+
+                                        
+# Labour force/workforce module
+labour_force <- read_dta("Tables/02_household-surveys/workforce_geih-2022-clean.dta",
                          col_select = c(all_of(id_cols), 
                                         "ORDEN",
-                                        "P6920"))
-
-# Labour force/workforce module
-labour_force_raw <- read_dta("Tables/02_household-surveys/workforce_geih-2022-clean.dta",
-                             col_select = c(all_of(id_cols), 
-                                            "ORDEN",
-                                            "P6240"))
-
-
+                                        "P6240"))
 
 # SANITY CHECKS -----------------------------------------------------------
 
 
-# Contrasted results with:
-# https://www.dane.gov.co/files/investigaciones/boletines/ech/ech/pres_ext_empleo_dic_22.pdf
-
-# Occupied in december 2022
-occupied_raw %>% 
-  group_by(MES) %>% 
-  summarise(occupied = sum(FEX_C18)) %>% 
-  head(12)
-
-# Occupied in 2022
-occupied_raw %>% 
-  summarise(occupied = sum(adj_weight))
-
-# Labour force per month (NOTE: MES columns is wrong, it has 1 in almost every month)
-labour_force_raw %>% 
-  group_by(MES) %>% 
-  summarise(PEA = sum(FEX_C18)) 
+# # Contrasted results with:
+# # https://www.dane.gov.co/files/investigaciones/boletines/ech/ech/pres_ext_empleo_dic_22.pdf
+# 
+# # Occupied in december 2022
+# occupied_raw %>% 
+#   group_by(MES) %>% 
+#   summarise(occupied = sum(FEX_C18)) %>% 
+#   head(12)
+# 
+# # Occupied in 2022
+# occupied_raw %>% 
+#   summarise(occupied = sum(adj_weight))
+# 
+# # Labour force per month (NOTE: MES columns is wrong, it has 1 in almost every month)
+# labour_force_raw %>% 
+#   group_by(MES) %>% 
+#   summarise(PEA = sum(FEX_C18)) 
 
 
 # SET UP ------------------------------------------------------------------
 
 # OCCUPIED
-occupied <- occupied_raw %>%
+occupied <- occupied %>%
   mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
          id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
   
@@ -54,7 +53,7 @@ occupied <- occupied_raw %>%
 
 
 # LABOUR FORCE
-labour_force <- labour_force_raw %>% 
+labour_force <- labour_force %>% 
   mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
          id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
   # FILTER FOR ONLY THOSE HOUSEHOLDS IN EMICRON
