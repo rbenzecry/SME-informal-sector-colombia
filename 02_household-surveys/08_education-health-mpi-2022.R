@@ -2,7 +2,7 @@
 # DATA --------------------------------------------------------------------
 
 # Individual level module
-individual_raw <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.dta",
+individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.dta") %>% 
                            # col_select = c(all_of(id_cols),
                            #                "ORDEN",
                            #                "P6040",
@@ -11,14 +11,13 @@ individual_raw <- read_dta("Tables/02_household-surveys/individual_geih-2022-cle
                            #                "P3043",
                            #                "P6170",
                            #                "P6090"),
-                           n_max = 10^4
-)
+                           # n_max = 10^4
+# )
 
 
 
 # SET UP ------------------------------------------------------------------
 
-individual <- individual_raw %>% 
   mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
          id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>%
   
@@ -44,7 +43,10 @@ individual <- individual_raw %>%
                                
                                is.na(edu_highest_degree) & edu_level == 1 ~ 0,
                                is.na(edu_highest_degree) & edu_level == 2 ~ 0,
+                               is.na(edu_highest_degree) & edu_level == 99 ~ 0,
+                               
                                is.na(edu_highest_degree) & edu_level == 3 ~ 6,
+                               is.na(edu_highest_degree) & edu_level == 4 ~ 6,
                                
                                edu_highest_degree == 2 ~ 11,
                                edu_highest_degree == 3 ~ 12,
@@ -89,8 +91,12 @@ individual <- individual_raw %>%
   # Household ratios and deprivations
   group_by(id_house) %>% 
   
-  mutate(edu_attend_ratio = sum(cy_edu_attend)/sum(child_youth),
-         child_occupied = sum(child_labour, na.rm = T),
+  mutate(edu_attend_ratio = ifelse(child_youth > 0,
+                                   yes = sum(cy_edu_attend)/sum(child_youth),
+                                   no = 0),
+         child_occupied = ifelse(child_labour > 0,
+                                 yes = sum(child_labour, na.rm = T),
+                                 no = 0),
          
          mpi_edu_attend = as.numeric(edu_attend_ratio > 0),
          mpi_child_labour = as.numeric(child_occupied > 0)) %>% 
@@ -112,7 +118,11 @@ individual <- individual_raw %>%
   group_by(id_house) %>% 
   mutate(health_ss_ratio = mean(poor_health_ss, na.rm = T),
          
-         mpi_health_ss = health_ss_ratio > 0) %>% 
-  ungroup()
+         mpi_health_ss = as.numeric(health_ss_ratio > 0)) %>% 
+  ungroup() %>% 
+  
+  
+  # Drop problematic columns
+  select(-c("PERIODO", "MES", "HOGAR", "CLASE"))
                             
 # -------------------------------------------------------------------------
