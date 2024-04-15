@@ -16,6 +16,7 @@ id_cols <- c("id_house", "adj_weight",
              "PERIODO", "MES",
              "DIRECTORIO", "SECUENCIA_P", 
              "HOGAR",
+             "CLASE",
              "FEX_C18",
              "DPTO", "AREA")
 
@@ -31,10 +32,12 @@ household <- read_dta("Tables/02_household-surveys/household_geih-2022-clean.dta
                                      
 # Occupied module
 occupied_raw <- read_dta("Tables/02_household-surveys/occupied_geih-2022-clean.dta",
-                         col_select = c(all_of(id_cols), "ORDEN",
+                         col_select = c(all_of(id_cols), 
+                                        "ORDEN",
                                         # ¿Está … cotizando actualmente a un fondo de pensiones?
                                         "P6920")) %>% 
-  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = "")) %>% 
+  mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
+         id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>% 
   rename(pension_fund = P6920)
 
 # Labour force/workforce module

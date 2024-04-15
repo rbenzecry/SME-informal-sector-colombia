@@ -41,10 +41,13 @@ emicron %>%
   # index (the hogher the better)
   ggplot(aes(x = -eco_dep_ratio, 
              y = II)) +
-  geom_jitter(aes(alpha = adj_weight),
-              height = 0.1,
-              width = 0.4,
-              col = "midnightblue") +
+  # geom_jitter(aes(alpha = adj_weight),
+  #             # alpha = 1/20,
+  #             height = 0.1,
+  #             width = 0.4,
+  #             col = "midnightblue") +
+  geom_point(alpha = 1/50,
+             stroke = 1000) +
   
   # Add lines that signal thresholds in each variable
   # Econ. dependency ratios above or equal to 3 are considered deprived/poor/vulnerable
