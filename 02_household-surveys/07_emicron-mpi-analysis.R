@@ -58,6 +58,15 @@ emicron <- emicron %>%
   left_join(labour_force) %>% 
   left_join(individual) %>% 
   
+  # Create MPI index
+  mutate(mpi_index = (mpi_water + mpi_excrete + mpi_floor + mpi_walls + mpi_overcrowding + 
+                        mpi_eco_dep + mpi_inf_work + 
+                        mpi_edu_years + mpi_literacy + 
+                        mpi_edu_attend + mpi_child_labour +
+                        mpi_health_ss) / 12,
+         # Binary variable of poverty: 1 means POOR 
+         mpi_poor = as.numeric(mpi_index >= 0.333)) %>% 
+  
   # Order and clean
   select("DPTO", "urban", "AREA", 
          
@@ -69,6 +78,8 @@ emicron <- emicron %>%
          "II_D1", "II_D2", "II_D3", "II_D4", "II",
          
          # MPI INDICATORS
+         "mpi_index",
+         "mpi_poor",
          
          # Dwelling/house and services
          "mpi_water", 
@@ -80,12 +91,15 @@ emicron <- emicron %>%
          # Labour
          "mpi_eco_dep", 
          "mpi_inf_work",
+         "mpi_labour",
          # Education
          "mpi_edu_years", 
          "mpi_literacy",
+         "mpi_education",
          # Children and youth
          "mpi_edu_attend", 
-         "mpi_child_labour", 
+         "mpi_child_labour",
+         "mpi_cy",
          # Health
          "mpi_health_ss",
          
@@ -148,48 +162,7 @@ emicron <- emicron %>%
          "PERIODO", "MES",
          "FEX_C18", "FEX_MICRO_DPTO", "F_EXP"
          )
-
-# INFORMALITY VS ECON. DEPENDENCY -----------------------------------------
-
-emicron %>%
-
-  # Invert econ dependency ratio to have the same direction as the informality
-  # index (the hogher the better)
-  ggplot(aes(x = -eco_dep_ratio,
-             y = II)) +
-  # geom_jitter(aes(alpha = adj_weight),
-  #             # alpha = 1/20,
-  #             height = 0.1,
-  #             width = 0.4,
-  #             col = "midnightblue") +
-  geom_point(alpha = 1/50,
-             stroke = 1000) +
-
-  # Add lines that signal thresholds in each variable
-  # Econ. dependency ratios above or equal to 3 are considered deprived/poor/vulnerable
-  geom_vline(xintercept = -3, linewidth = 1) +
-
-  # Informality index of 4 means formal
-  geom_hline(yintercept = 3, linewidth = 1) +
-
-  # Add labels
-  labs(x = "Economic dependecy ratio (inverted)",
-       y = "Informality Index",
-       title = "Informality vs Economic dependency",
-       subtitle = "Economic dependency ratio = number of people per occupied member in the household") +
-  custom_theme()
-
-
-
-# INFORMALITY VS INFORMAL WORK --------------------------------------------
-
-
-emicron %>%
-
-  ggplot(aes(-mpi_inf_work, II)) +
-  geom_jitter(aes(alpha = adj_weight),
-              height = 0.1,
-              width = 0.4)  +
-  custom_theme()
-
+  
+  
+  
 # -------------------------------------------------------------------------
