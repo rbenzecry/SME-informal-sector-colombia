@@ -36,7 +36,9 @@ individual <- individual_raw %>%
          edu_attendance = P6170,
          
          health_ss = P6090) %>% 
-  
+
+# EDUCATION ---------------------------------------------------------------
+
   # CHECK IF CORRECTION IS NEEDED WITH EDU LEVEL VARIABLE !!!
   mutate(edu_years = case_when(edu_highest_degree == 1 ~ 0,
                                
@@ -64,12 +66,17 @@ individual <- individual_raw %>%
   
   # Household ratios and deprivations
   group_by(id_house) %>% 
+  
   mutate(avg_edu_years = mean(edu_years_adult, na.rm = T),
          illiterate_ratio = mean(illiterate, na.rm = T),
          
          mpi_edu_years = as.numeric(avg_edu_years < 9),
          mpi_literacy = as.numeric(illiterate_ratio > 0)) %>% 
-  ungroup() %>% 
+  
+  ungroup() %>%
+  
+  # Create the summary index for the education dimension
+  mutate(mpi_education = (mpi_edu_years + mpi_literacy) / 2) %>% 
   
   
 # CHILDREN AND YOUTH ------------------------------------------------------
@@ -81,11 +88,18 @@ individual <- individual_raw %>%
                                      id_per %in% id_occupied)) %>% 
   # Household ratios and deprivations
   group_by(id_house) %>% 
+  
   mutate(edu_attend_ratio = sum(cy_edu_attend)/sum(child_youth),
-         mpi_edu_attend = edu_attend_ratio > 0,
+         child_occupied = sum(child_labour, na.rm = T),
          
-         mpi_child_labour = as.numeric(sum(child_labour, na.rm = T) > 0)) %>% 
+         mpi_edu_attend = as.numeric(edu_attend_ratio > 0),
+         mpi_child_labour = as.numeric(child_occupied > 0)) %>% 
+  
   ungroup() %>% 
+  
+  # Create the summary index for the children and youth dimension
+  mutate(mpi_cy = (mpi_edu_attend + mpi_child_labour) / 2) %>% 
+  
   
        
 # HEALTH ------------------------------------------------------------------
