@@ -163,6 +163,9 @@ emicron <- emicron %>%
          "FEX_C18", "FEX_MICRO_DPTO", "F_EXP"
          )
   
-  
-  
+
+# EXPORT ------------------------------------------------------------------
+
+write_dta(emicron, "Tables/emicron-informality-mpi.dta")
+
 # -------------------------------------------------------------------------
