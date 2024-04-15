@@ -163,6 +163,8 @@ emicron <- emicron %>%
          "FEX_C18", "FEX_MICRO_DPTO", "F_EXP"
          )
   
+# Check NAs
+table(is.na(emicron$mpi_index))
 
 # EXPORT ------------------------------------------------------------------
 
