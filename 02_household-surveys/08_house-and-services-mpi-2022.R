@@ -2,7 +2,7 @@
 # DATA --------------------------------------------------------------------
 
 # Household level module
-household_raw <- read_dta("Tables/02_household-surveys/household_geih-2022-clean.dta",
+household <- read_dta("Tables/02_household-surveys/household_geih-2022-clean.dta",
                           col_select = c(all_of(id_cols),
                                          "P6008",
                                          "P4030S5",
@@ -19,14 +19,12 @@ household_raw <- read_dta("Tables/02_household-surveys/household_geih-2022-clean
                           as.character(SECUENCIA_P), 
                           sep = "")) %>% 
   
-  # FILTER FOR ONLY THOSE IN EMICRON
-  filter(id_house %in% emicron$id_house)
+  # FILTER FOR ONLY THOSE HOUSEHOLDS IN EMICRON
+  filter(id_house %in% emicron$id_house) %>% 
   
 
 # HOUSING AND SERVICES ----------------------------------------------------
 
-household <- household_raw %>% 
-  
   # Rename all variables
   select(all_of(id_cols),
          id_house,
