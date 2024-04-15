@@ -22,8 +22,8 @@ individual <- individual_raw %>%
   mutate(id_house = paste(DIRECTORIO, SECUENCIA_P, sep = ""),
          id_per = paste(DIRECTORIO, SECUENCIA_P, ORDEN, sep = "")) %>%
   
-  # FILTER FOR ONLY THOSE IN EMICRON
-  filter(id_per %in% emicron$id_per) %>% 
+  # FILTER FOR ONLY THOSE HOUSEHOLDS IN EMICRON
+  filter(id_house %in% emicron$id_house) %>% 
 
   select(all_of(id_cols),
          id_house,
@@ -77,8 +77,8 @@ individual <- individual_raw %>%
   mutate(child_youth = as.numeric(age >= 6 & age <= 16),
          cy_edu_attend = ifelse(child_youth == 1 & edu_attendance == 2,
                                 yes = 1, no = 0),
-         child_labour = as.numeric(age >= 12 & age <= 17 & 
-                                     id_per %in% occupied$id_per)) %>% 
+         child_labour = as.numeric(age >= 12 & age <= 17 &
+                                     id_per %in% id_occupied)) %>% 
   # Household ratios and deprivations
   group_by(id_house) %>% 
   mutate(edu_attend_ratio = sum(cy_edu_attend)/sum(child_youth),
