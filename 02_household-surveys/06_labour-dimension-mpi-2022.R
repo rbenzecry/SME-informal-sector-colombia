@@ -102,7 +102,10 @@ labour_force <- labour_force_raw %>%
          
          # Define if the household is deprived
          mpi_eco_dep = as.numeric(eco_dep_ratio >= 3),
-         mpi_inf_work = as.numeric(inf_work_ratio > 0))
+         mpi_inf_work = as.numeric(inf_work_ratio > 0),
+         
+         # Summary index for the labour dimension
+         mpi_labour = (mpi_eco_dep + mpi_inf_work) / 2)
 
 
 # CLEAN -------------------------------------------------------------------
