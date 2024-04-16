@@ -3,16 +3,7 @@
 
 # Individual level module
 individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.dta") %>% 
-                           # col_select = c(all_of(id_cols),
-                           #                "ORDEN",
-                           #                "P6040",
-                           #                "P6160",
-                           #                "P3042",
-                           #                "P3043",
-                           #                "P6170",
-                           #                "P6090"),
-                           # n_max = 10^4
-# )
+                           # n_max = 10^4)
 
 
 
