@@ -63,7 +63,7 @@ https://microdatos.dane.gov.co/index.php/catalog/771/get-microdata
 
 _*Note: scripts starting with `00` are not meant to run individually, they are used with the `source` function in another script. In this case, the `03_emicron-mpi-master-file.R` calls the `00` scripts for the construction of the multidimensional poverty index (MPI)._
 
-* `01_rename-folders-geih.R`: the script renames the folders of GEIH when downloaded directly from DANE's website. It removes everything from the folder's name except the month.
+* `01_rename-folders-geih.R`: renames the folders of GEIH when downloaded directly from DANE's website. It removes everything from the folder's name except the month.
 
 * `02_join-modules-geih.R`: joins the monthly data sets to have a single annual data set per module. It keeps only the columns that are common in all months and transforms the column type to the less restrictive one across all months (character) when is needed. It creates the variable `adj_weight` to adjust the factor of expansion to the (now) annual data by simply dividing the original variable (`FEX_C18`) by 12, as instructed by DANE worker and UNDP. All annual modules are exported to `dta` files.
 
