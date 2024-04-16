@@ -52,11 +52,15 @@ source("02_household-surveys/00_labour-mpi-2022.R")
 # Education and health dimensions
 source("02_household-surveys/00_education-health-mpi-2022.R")
 
+# Add basic migrant variables
+source("02_household-surveys/00_migration-emicron-2022.R")
+
 # JOIN DATA SETS ----------------------------------------------------------
 
 emicron <- emicron %>% 
   left_join(labour_force) %>% 
   left_join(individual) %>% 
+  left_join(migration) %>% 
   
   # Create MPI index
   mutate(mpi_index = (mpi_water + mpi_excrete + mpi_floor + mpi_walls + mpi_overcrowding + 
@@ -109,6 +113,16 @@ emicron <- emicron %>%
          "CONSUMO_INTERMEDIO", "GASTOS_MES", 
          "VALOR_AGREGADO","INGRESO_MIXTO", 
          "PRESTACIONES", "REMUNERACION_TOTAL", "SUELDOS", 
+         
+         # Migration variables
+         "birth_country",
+         "col_nationality",
+         "nationality",
+         "country_5yrs_ago",
+         "born_colombia",
+         "foreigner",       
+         "venezuelan",
+         "recent_migrant",
          
          # General individual variables
          "avg_edu_years", 
@@ -165,6 +179,7 @@ emicron <- emicron %>%
   
 # Check NAs
 table(is.na(emicron$mpi_index))
+table(is.na(emicron$foreigner))
 
 # EXPORT ------------------------------------------------------------------
 
