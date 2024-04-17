@@ -19,6 +19,30 @@ emicron_mpi <- emicron_mpi %>%
             by = c("DPTO" = "code")) %>% 
   rename(dpto_label = name)
 
+
+
+# DEPRIVATIONS VS POVERTY RATE --------------------------------------------
+
+emicron_mpi %>% 
+  group_by(dpto_label) %>% 
+  summarise(mpi_index = weighted.mean(mpi_index, adj_weight, na.rm = T),
+            mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
+            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  
+  ggplot(aes(mpi_rate, mpi_index)) +
+  
+  geom_point(aes(size = n_pop), col = "midnightblue") +
+  geom_abline(slope = 1, intercept = 0) +
+  
+  ylim(0,1) +
+  xlim(0,1) +
+  
+  labs(x = "Multidimensional povery rate",
+       y = "Avg. percentage of deprivations",
+       title = "Multidimensional poverty and percentage of deprivations",
+       subtitle = "By department") +
+  custom_theme()
+
 # MPI rate vs Informality by DPTO -----------------------------------------
 
 # Scatter plot
@@ -37,6 +61,25 @@ emicron_mpi %>%
        title = "Multidimensional poverty and Informality",
        subtitle = "By department") +
   custom_theme()
+
+
+# Scatter plot
+emicron_mpi %>% 
+  group_by(dpto_label) %>% 
+  summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
+            mpi_index = weighted.mean(mpi_index, adj_weight, na.rm = T),
+            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  
+  ggplot(aes(mpi_index, informality_index)) +
+  
+  geom_point(aes(size = n_pop), col = "midnightblue", alpha = 0.5) +
+  
+  labs(x = "Avg. percentage of deprivations",
+       y = "Informality Index (avg.)",
+       title = "Multidimensional poverty (deprivations) and Informality",
+       subtitle = "By department") +
+  custom_theme()
+
 
 
 # Column chart
@@ -306,6 +349,7 @@ emicron_mpi %>%
   group_by(dpto_label) %>% 
   summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
             mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
+            mpi_avg = weighted.mean(mpi_index, adj_weight, na.rm = T),
             n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
   arrange(desc(mpi_rate)) %>% 
   head(20)
