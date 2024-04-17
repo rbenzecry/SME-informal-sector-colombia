@@ -105,7 +105,7 @@ emicron_mpi %>%
   labs(x = "Multidimensional Poverty Index (inverted)",
        y = "Informality Index",
        title = "Informality vs Muldimensional Poverty Index",
-       subtitle = "MPI captures a percentage of deprivations in the household") +
+       subtitle = "MPI captures the percentage of deprivations in the household") +
   custom_theme()
 
 
@@ -125,7 +125,7 @@ emicron_mpi %>%
   labs(x = "Multidimensional Poverty Index (inverted)",
        y = "Informality Index",
        title = "Informality vs Muldimensional Poverty Index",
-       subtitle = "MPI captures a percentage of deprivations in the household\nNot weighted") +
+       subtitle = "MPI captures the percentage of deprivations in the household\nNot weighted") +
   custom_theme()
 
 
@@ -149,7 +149,7 @@ emicron_mpi %>%
   labs(x = "Multidimensional Poverty Index (inverted)",
        y = "Informality Index",
        title = "Informality vs Muldimensional Poverty Index by Urbanity",
-       subtitle = "MPI captures a percentage of deprivations in the household\nBy urbanity") +
+       subtitle = "MPI captures the percentage of deprivations in the household\nBy urbanity") +
   custom_theme()
 
 
@@ -172,7 +172,7 @@ emicron_mpi %>%
   labs(x = "Multidimensional Poverty Index (inverted)",
        y = "Informality Index",
        title = "Informality vs Muldimensional Poverty Index by Urbanity",
-       subtitle = "MPI captures a percentage of deprivations in the household\nBy urbanity - Not weighted") +
+       subtitle = "MPI captures the percentage of deprivations in the household\nBy urbanity - Not weighted") +
   custom_theme()
 
 # INFORMALITY VS ECON. DEPENDENCY -----------------------------------------
