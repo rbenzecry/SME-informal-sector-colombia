@@ -229,6 +229,48 @@ emicron_mpi %>%
   custom_theme()
 ```
 
+### MPI index vs Informality by Department
+
+```{r}
+emicron_mpi %>%
+  filter(!is.na(dpto_label)) %>% 
+  
+  ggplot(aes(x = -mpi_index,
+             y = II)) +
+  geom_jitter(aes(alpha = adj_weight),
+              height = 0.1,
+              col = "midnightblue") +
+  
+  geom_vline(xintercept = -0.33, linewidth = 1) +
+  geom_hline(yintercept = 3, linewidth = 1) +
+  
+  facet_wrap(reorder(dpto_label, mpi_poor, 
+                     FUN = mean)~.) +
+  
+  # Add labels
+  labs(x = "Multidimensional Poverty Index (inverted)",
+       y = "Informality Index",
+       title = "Informality vs Muldimensional Poverty Index by Department",
+       subtitle = "MPI captures the percentage of deprivations in the household") +
+  
+  theme_classic() +
+  theme(
+      panel.background = element_rect(fill = "white", color = "white"),
+      # Remove vertical grid lines
+      panel.grid.major.x = element_blank(),  
+      panel.grid.major.y = element_line(color = "gray", linetype = "dashed"),
+      
+      axis.line.y = element_line(color = "white"),
+      axis.line.x = element_line(color = "darkgray"),
+      
+      # Set color of axis ticks
+      axis.ticks = element_line(color = "darkgray"),
+      legend.position = "none"
+      )
+
+```
+
+
 ## Informality vs Economic Dependency
 
 ```{r}

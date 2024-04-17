@@ -175,6 +175,58 @@ emicron_mpi %>%
        subtitle = "MPI captures the percentage of deprivations in the household\nBy urbanity - Not weighted") +
   custom_theme()
 
+
+# MPI index vs Informality by DPTO ----------------------------------------
+
+emicron_mpi %>%
+  filter(!is.na(dpto_label)) %>% 
+  
+  ggplot(aes(x = -mpi_index,
+             y = II)) +
+  geom_jitter(aes(alpha = adj_weight),
+              height = 0.1,
+              col = "midnightblue") +
+  
+  geom_vline(xintercept = -0.33, linewidth = 1) +
+  geom_hline(yintercept = 3, linewidth = 1) +
+  
+  facet_wrap(reorder(dpto_label, mpi_poor, 
+                     FUN = mean)~.) +
+  
+  # Add labels
+  labs(x = "Multidimensional Poverty Index (inverted)",
+       y = "Informality Index",
+       title = "Informality vs Muldimensional Poverty Index by Department",
+       subtitle = "MPI captures the percentage of deprivations in the household") +
+  custom_theme() +
+  theme(legend.position = "none")
+
+
+# Note weighted
+emicron_mpi %>%
+  filter(!is.na(dpto_label)) %>% 
+  
+  ggplot(aes(x = -mpi_index,
+             y = II)) +
+  geom_jitter(alpha = 1/25,
+              height = 0.1,
+              col = "midnightblue") +
+  
+  geom_vline(xintercept = -0.33, linewidth = 1) +
+  geom_hline(yintercept = 3, linewidth = 1) +
+  
+  facet_wrap(reorder(dpto_label, mpi_poor, 
+                     FUN = mean)~.) +
+  
+  # Add labels
+  labs(x = "Multidimensional Poverty Index (inverted)",
+       y = "Informality Index",
+       title = "Informality vs Muldimensional Poverty Index by Department",
+       subtitle = "MPI captures the percentage of deprivations in the household") +
+  custom_theme() +
+  theme(legend.position = "none")
+
+
 # INFORMALITY VS ECON. DEPENDENCY -----------------------------------------
 
 emicron_mpi %>%
@@ -250,6 +302,13 @@ emicron_mpi %>%
 
 # By venezuelan, recent migrant, overcrowding ratio, edu_years, mpi_housing
 
+emicron_mpi %>% 
+  group_by(dpto_label) %>% 
+  summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
+            mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
+            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  arrange(desc(mpi_rate)) %>% 
+  head(20)
 
 
 # -------------------------------------------------------------------------
