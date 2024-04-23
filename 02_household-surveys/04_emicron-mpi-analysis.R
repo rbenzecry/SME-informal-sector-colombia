@@ -341,6 +341,69 @@ emicron_mpi %>%
   
   custom_theme()
 
+
+
+# OVERCROWDING ------------------------------------------------------------
+
+emicron_mpi %>%
+  
+  ggplot(aes(-overcrowding_ratio, II)) +
+  geom_jitter(aes(alpha = adj_weight),
+              height = 0.1,
+              width = 0.05,
+              col = "midnightblue")  +
+  
+  geom_vline(xintercept = -3, linewidth = 1) +
+  geom_hline(yintercept = 3, linewidth = 1) +
+  
+  labs(x = "Overcrowding ratio (inverted)",
+       y = "Informality Index",
+       title = "Informality vs Overcrowding",
+       subtitle = "Overcrowding ratio: number of people per bedroom") +
+  
+  custom_theme()
+
+
+# YEARS OF EDUCATION ------------------------------------------------------
+
+emicron_mpi %>%
+  
+  ggplot(aes(edu_years_adult, II)) +
+  geom_jitter(aes(alpha = adj_weight),
+              height = 0.1,
+              width = 0.05,
+              col = "midnightblue")  +
+  
+  geom_vline(xintercept = 9, linewidth = 1) +
+  geom_hline(yintercept = 3, linewidth = 1) +
+  
+  labs(x = "Average years of education",
+       y = "Informality Index",
+       title = "Informality vs Years of Education",
+       subtitle = "") +
+  
+  custom_theme()
+
+# MPI HOUSING -------------------------------------------------------------
+
+emicron_mpi %>%
+  
+  ggplot(aes(-mpi_housing, II)) +
+  geom_jitter(aes(alpha = adj_weight),
+              height = 0.1,
+              width = 0.05,
+              col = "midnightblue")  +
+  
+  geom_vline(xintercept = -0.33, linewidth = 1) +
+  geom_hline(yintercept = 3, linewidth = 1) +
+  
+  labs(x = "Housing dimension of MPI",
+       y = "Informality Index",
+       title = "Informality vs Housing conditions and public services",
+       subtitle = "Percentage of deprivations in the housing dimension") +
+  
+  custom_theme()
+
 # PENDING -----------------------------------------------------------------
 
 # By venezuelan, recent migrant, overcrowding ratio, edu_years, mpi_housing
