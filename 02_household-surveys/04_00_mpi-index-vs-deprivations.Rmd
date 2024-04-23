@@ -1,0 +1,88 @@
+---
+title: 'Emicron 2022'
+subtitle: 'MPI vs Percentage of Deprivations'
+author: "Ricardo Benzecry"
+date: "2024-04-17"
+output: 
+  html_document:
+    theme: lumen
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: "hide"
+---
+
+```{r, include = FALSE}
+
+setwd("G:/My Drive/LSE/Year 1/PP422 Data Science/WT/Group project/SME-informal-sector-colombia")
+
+source("00_settings.R")
+# DATA --------------------------------------------------------------------
+
+emicron_mpi <- read_dta("Tables/emicron-informality-mpi.dta")
+
+# Import department names
+geo_code_labels <- read_excel("Data/GEIH-2023/DICCIONARIO_DATOS_BASES_ANONIMIZADAS_GEIH_2023.xlsx",
+                              sheet = "geo_codes")
+
+
+# SET UP ------------------------------------------------------------------
+
+dpto_names <- geo_code_labels %>% 
+  filter(abb == "dpto")
+
+emicron_mpi <- emicron_mpi %>% 
+  left_join(select(dpto_names, code, name),
+            by = c("DPTO" = "code")) %>% 
+  rename(dpto_label = name)
+```
+
+
+```{r}
+emicron_mpi %>% 
+  ggplot(aes(mpi_index, mpi_deprivations)) +
+  geom_point(alpha = 1/50)+
+  geom_smooth(method = "lm", formula = y ~ x)+
+  # geom_line()+
+  geom_abline(slope = 1, intercept = 0) +
+  custom_theme()
+```
+ 
+### By Department
+
+#### Weighted averages
+
+```{r}
+emicron_mpi %>% 
+  
+  group_by(dpto_label) %>% 
+  summarise(mpi = weighted.mean(mpi_index, adj_weight, na.rm = T),
+            deprivations = weighted.mean(mpi_deprivations, adj_weight, na.rm = T)) %>% 
+  ungroup() %>% 
+  
+  ggplot(aes(mpi, deprivations)) +
+  geom_point() +
+  
+  geom_abline(slope = 1, intercept = 0) +
+  
+  custom_theme()
+```
+
+#### Weighted rates
+
+```{r}
+emicron_mpi %>% 
+  
+  mutate(depriv_poor = as.numeric(mpi_deprivations >= 0.333)) %>% 
+  
+  group_by(dpto_label) %>% 
+  summarise(mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
+            depriv_rate = weighted.mean(depriv_poor, adj_weight, na.rm = T)) %>% 
+  ungroup() %>% 
+  
+  ggplot(aes(mpi_rate, depriv_rate)) +
+  geom_point() +
+ 
+  geom_abline(slope = 1, intercept = 0) +
+  
+  custom_theme()
+```
