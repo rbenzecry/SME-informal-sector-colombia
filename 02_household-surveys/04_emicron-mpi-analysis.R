@@ -47,23 +47,25 @@ emicron_mpi %>%
 
 # Scatter plot
 emicron_mpi %>% 
+  filter(!is.na(dpto_label)) %>% 
   group_by(dpto_label) %>% 
   summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
             mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
             n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
   
-  ggplot(aes(mpi_rate, informality_index)) +
+  ggplot(aes(mpi_rate*100, informality_index)) +
   
   geom_point(aes(size = n_pop), col = "midnightblue", alpha = 0.5) +
   
-  labs(x = "Multidimensional povery rate",
-       y = "Informality Index (avg)",
-       title = "Multidimensional poverty and Informality",
-       subtitle = "By department") +
+  labs(x = "Poverty rate",
+       y = "Avg. informality index",
+       title = "Higher poverty is related to lower levels of formality",
+       subtitle = "Multidimensional poverty rate and Informality, by department",
+       size = 'Population (k)') +
   custom_theme()
 
 
-# Scatter plot
+# Scatter plot by department and deprivations
 emicron_mpi %>% 
   group_by(dpto_label) %>% 
   summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
@@ -74,34 +76,56 @@ emicron_mpi %>%
   
   geom_point(aes(size = n_pop), col = "midnightblue", alpha = 0.5) +
   
-  labs(x = "Avg. percentage of deprivations",
+  labs(x = "Avg. weighted percentage of deprivations",
        y = "Informality Index (avg.)",
        title = "Multidimensional poverty (deprivations) and Informality",
-       subtitle = "By department") +
+       subtitle = "By area",
+       size = 'Population') +
   custom_theme()
 
 
+# Scatter plot by area 
+emicron_mpi %>% 
+  group_by(AREA) %>% 
+  summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
+            mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
+            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  
+  ggplot(aes(mpi_rate*100, informality_index)) +
+  
+  geom_point(col = "midnightblue", alpha = 0.5) +
+  
+  labs(x = "Poverty rate",
+       y = "Avg. Informality Index",
+       title = "Multidimensional poverty (deprivations) and Informality",
+       subtitle = "By area",
+       size = 'Population') +
+  custom_theme()
 
 # Column chart
 emicron_mpi %>% 
+  filter(!is.na(dpto_label)) %>% 
   group_by(dpto_label) %>% 
   summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
             mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
             n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
-  ungroup() %>%
+  ungroup() %>% 
   
   ggplot(aes(x = reorder(dpto_label, informality_index), 
-             mpi_rate)) +
+             mpi_rate*100)) +
   
   geom_col(aes(fill = informality_index)) +
-  geom_text(aes(label = round(informality_index, 1)), nudge_y = 0.05) +
+  geom_text(aes(label = round(informality_index, 1)), nudge_y = 3) +
   
   labs(x = "Department",
-       y = "Multidimensional povery rate",
-       title = "Multidimensional poverty and Informality",
-       subtitle = "By department") +
+       y = "Poverty rate (%)",
+       title = "Multidimensional Poverty and Informality",
+       subtitle = "By department",
+       fill = 'Informality Index',
+       caption = "Note: numeric labels above the bars show the average informality index of each department.") +
   custom_theme() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.caption = element_text(hjust = 0))
 
 
 # Column chart
@@ -126,7 +150,8 @@ emicron_mpi %>%
   labs(x = "Department",
        y = "Multidimensional povery rate",
        title = "Multidimensional poverty and Informality",
-       subtitle = "By department and rurality") +
+       subtitle = "By department and rurality",
+       fill = 'Informality Index') +
   custom_theme() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
@@ -135,34 +160,40 @@ emicron_mpi %>%
 
 emicron_mpi %>%
   
-  ggplot(aes(x = -mpi_index,
+  ggplot(aes(x = mpi_index,
              y = II)) +
   geom_jitter(aes(alpha = adj_weight),
-              height = 0.1,
+              height = 0.1, width = 0.01,
               col = "midnightblue") +
   
-  geom_vline(xintercept = -0.33, linewidth = 1) +
-  geom_hline(yintercept = 3, linewidth = 1) +
+  geom_vline(xintercept = 0.33, linewidth = 1) +
+  geom_hline(yintercept = 2, linewidth = 1) +
+  
+  scale_x_reverse() +
+  scale_alpha_continuous(range = c(0.1, 0.5)) +
   
   # Add labels
   labs(x = "Multidimensional Poverty Index (inverted)",
        y = "Informality Index",
-       title = "Informality vs Muldimensional Poverty Index",
-       subtitle = "MPI captures the percentage of deprivations in the household") +
-  custom_theme()
+       title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
+       subtitle = "Informality and Muldimensional Poverty") +
+  custom_theme() +
+  theme(legend.position = "none")
 
 
 # Without weighting
 emicron_mpi %>%
   
-  ggplot(aes(x = -mpi_index,
+  ggplot(aes(x = mpi_index,
              y = II)) +
   geom_jitter(alpha = 1/50,
-              height = 0.1,
+              height = 0.1, width = 0.01,
               col = "midnightblue") +
   
-  geom_vline(xintercept = -0.33, linewidth = 1) +
+  geom_vline(xintercept = 0.33, linewidth = 1) +
   geom_hline(yintercept = 3, linewidth = 1) +
+  
+  scale_x_reverse() +
   
   # Add labels
   labs(x = "Multidimensional Poverty Index (inverted)",
@@ -245,7 +276,7 @@ emicron_mpi %>%
   theme(legend.position = "none")
 
 
-# Note weighted
+# Not weighted
 emicron_mpi %>%
   filter(!is.na(dpto_label)) %>% 
   
@@ -416,6 +447,17 @@ emicron_mpi %>%
             n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
   arrange(desc(mpi_rate)) %>% 
   head(20)
+
+
+
+
+emicron_mpi %>% 
+  ggplot(aes(adj_weight, F_EXP)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0) +
+  custom_theme()
+
+
 
 
 # -------------------------------------------------------------------------
