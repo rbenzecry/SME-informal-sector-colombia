@@ -121,7 +121,7 @@ emicron_mpi %>%
        y = "Poverty rate (%)",
        title = "Multidimensional Poverty and Informality",
        subtitle = "By department",
-       fill = 'Informality Index',
+       fill = 'Informality',
        caption = "Note: numeric labels above the bars show the average informality index of each department.") +
   custom_theme() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
