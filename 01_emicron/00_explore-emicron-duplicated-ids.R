@@ -1,9 +1,5 @@
 
-library(tidyverse)
-library(readxl)
-library(haven)
-library(janitor)
-library(data.table)
+source('00_settings.R')
 
 # DATA --------------------------------------------------------------------
 
@@ -34,10 +30,13 @@ nrow(emicron_mpi) - length(unique(emicron_mpi$id_per))
 
 # ZOOM IN DUPLICATES ------------------------------------------------------
 
-duplicates <- emicron_mpi %>%
+emicron_mpi2 <- emicron_mpi %>%
   group_by(id_per) %>% 
   mutate(n_dup = n()) %>% 
   ungroup() %>% 
+  mutate(dup = as.numeric(n_dup > 1))
+
+duplicates <- emicron_mpi2 %>% 
   filter(n_dup > 1)
 
 
@@ -47,7 +46,17 @@ table(is.na(duplicates$adj_weight))
 # How many duplicates of each id?
 summary(duplicates$n_dup)
 
+table(emicron_mpi2$dup)
 
+# Poverty rate iIDsf it has duplicated rows
+emicron_mpi2 %>% 
+  group_by(dup) %>% 
+  summarise(mpi_rate = weighted.mean(mpi_poor, F_EXP, na.rm = T)) %>% 
+  ungroup() %>% 
+  
+  ggplot(aes(dup, mpi_rate)) +
+  geom_col() +
+  custom_theme()
 
 # CHECK WEIGHTS -----------------------------------------------------------
 
