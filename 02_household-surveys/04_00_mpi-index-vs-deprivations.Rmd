@@ -55,8 +55,8 @@ emicron_mpi %>%
 emicron_mpi %>% 
   
   group_by(dpto_label) %>% 
-  summarise(mpi = weighted.mean(mpi_index, adj_weight, na.rm = T),
-            deprivations = weighted.mean(mpi_deprivations, adj_weight, na.rm = T)) %>% 
+  summarise(mpi = weighted.mean(mpi_index, F_EXP, na.rm = T),
+            deprivations = weighted.mean(mpi_deprivations, F_EXP, na.rm = T)) %>% 
   ungroup() %>% 
   
   ggplot(aes(mpi, deprivations)) +
@@ -75,8 +75,8 @@ emicron_mpi %>%
   mutate(depriv_poor = as.numeric(mpi_deprivations >= 0.333)) %>% 
   
   group_by(dpto_label) %>% 
-  summarise(mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
-            depriv_rate = weighted.mean(depriv_poor, adj_weight, na.rm = T)) %>% 
+  summarise(mpi_rate = weighted.mean(mpi_poor, F_EXP, na.rm = T),
+            depriv_rate = weighted.mean(depriv_poor, F_EXP, na.rm = T)) %>% 
   ungroup() %>% 
   
   ggplot(aes(mpi_rate, depriv_rate)) +
