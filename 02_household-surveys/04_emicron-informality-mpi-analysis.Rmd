@@ -12,6 +12,9 @@ output:
 ---
 
 ```{r, include = FALSE}
+
+setwd("G:/My Drive/LSE/Year 1/PP422 Data Science/WT/Group project/SME-informal-sector-colombia")
+
 source("00_settings.R")
 # DATA --------------------------------------------------------------------
 
@@ -43,9 +46,9 @@ Multidimensional poverty rates, average informality index and population size (t
 # Scatter plot
 emicron_mpi %>% 
   group_by(dpto_label) %>% 
-  summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
-            mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
-            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  summarise(informality_index = weighted.mean(II, F_EXP, na.rm = T),
+            mpi_rate = weighted.mean(mpi_poor, F_EXP, na.rm = T),
+            n_pop = sum(F_EXP, na.rm = T)/10^3) %>% 
   
   ggplot(aes(mpi_rate, informality_index)) +
   
@@ -61,9 +64,9 @@ emicron_mpi %>%
 # Column chart
 emicron_mpi %>% 
   group_by(dpto_label) %>% 
-  summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
-            mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
-            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  summarise(informality_index = weighted.mean(II, F_EXP, na.rm = T),
+            mpi_rate = weighted.mean(mpi_poor, F_EXP, na.rm = T),
+            n_pop = sum(F_EXP, na.rm = T)/10^3) %>% 
   ungroup() %>%
   
   ggplot(aes(x = reorder(dpto_label, informality_index), 
@@ -95,9 +98,9 @@ emicron_mpi %>%
 # Column chart
 emicron_mpi %>% 
   group_by(dpto_label, urban) %>% 
-  summarise(informality_index = weighted.mean(II, adj_weight, na.rm = T),
-            mpi_rate = weighted.mean(mpi_poor, adj_weight, na.rm = T),
-            n_pop = sum(adj_weight, na.rm = T)/10^3) %>% 
+  summarise(informality_index = weighted.mean(II, F_EXP, na.rm = T),
+            mpi_rate = weighted.mean(mpi_poor, F_EXP, na.rm = T),
+            n_pop = sum(F_EXP, na.rm = T)/10^3) %>% 
   ungroup() %>%
   
   # Clean NAs
@@ -146,7 +149,7 @@ emicron_mpi %>%
   
   ggplot(aes(x = -mpi_index,
              y = II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               col = "midnightblue") +
   
@@ -189,7 +192,7 @@ emicron_mpi %>%
   
   ggplot(aes(x = -mpi_index,
              y = II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               col = "midnightblue") +
   
@@ -237,7 +240,7 @@ emicron_mpi %>%
   
   ggplot(aes(x = -mpi_index,
              y = II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               col = "midnightblue") +
   
@@ -280,7 +283,7 @@ emicron_mpi %>%
   # index (the hogher the better)
   ggplot(aes(x = -eco_dep_ratio,
              y = II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               # alpha = 1/20,
               height = 0.1,
               width = 0.4,
@@ -328,7 +331,7 @@ emicron_mpi %>%
 emicron_mpi %>%
   
   ggplot(aes(-inf_work_ratio, II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               width = 0.05,
               col = "midnightblue")  +
@@ -350,7 +353,7 @@ emicron_mpi %>%
 emicron_mpi %>%
   
   ggplot(aes(-overcrowding_ratio, II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               width = 0.05,
               col = "midnightblue")  +
@@ -372,7 +375,7 @@ emicron_mpi %>%
 emicron_mpi %>%
   
   ggplot(aes(edu_years_adult, II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               width = 0.05,
               col = "midnightblue")  +
@@ -394,7 +397,7 @@ emicron_mpi %>%
 emicron_mpi %>%
   
   ggplot(aes(-mpi_housing, II)) +
-  geom_jitter(aes(alpha = adj_weight),
+  geom_jitter(aes(alpha = F_EXP),
               height = 0.1,
               width = 0.05,
               col = "midnightblue")  +
