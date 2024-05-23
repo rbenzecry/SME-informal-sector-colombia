@@ -1,6 +1,5 @@
 
 source("00_settings.R")
-library(esquisse)
 
 # DATA --------------------------------------------------------------------
 
@@ -136,7 +135,8 @@ emicron_mpi %>%
             n_pop = sum(F_EXP, na.rm = T)/10^3) %>% 
   ungroup() %>% 
   
-  ggplot(aes(x = reorder(dpto_label, informality_index), 
+  ggplot(aes(x = reorder(dpto_label, informality_index),
+             # x = reorder(dpto_label, -mpi_rate),
              mpi_rate*100)) +
   
   geom_col(aes(fill = informality_index)) +
