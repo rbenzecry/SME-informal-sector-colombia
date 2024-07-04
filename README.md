@@ -14,13 +14,17 @@ Authors:
 * Shuxin Deng
 
 
-### Folders, scripts and tables structure
+### Folders, scripts and Outputs structure
 
 We should all share a folder structure to avoid issues when trying to reproduce or continue a code from someone else.
 
-The folder where you copy the repository should have the following folders:
+The folder where you copy the repository must follow the OneDrive structure and have the following folders:
 * Data: all the raw data and inputs used/to use
-* Tables: intermediate outputs, processed databases, summary tables and so forth
+  - Emicron-2022
+  - GEIH-2022
+* Outputs: intermediate outputs, processed databases, summary tables and so forth
+  - 01_emicron
+  - 02_household-surveys
 * Plots: all the plots exported
   
 _*Note: this is a proposed structure. Obviously is open to change, I just want to make sure we have a clearly defined common structure to work._
