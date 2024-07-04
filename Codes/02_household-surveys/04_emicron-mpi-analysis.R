@@ -135,15 +135,15 @@ emicron_mpi %>%
             n_pop = sum(F_EXP, na.rm = T)/10^3) %>% 
   ungroup() %>% 
   
-  ggplot(aes(x = reorder(dpto_label, informality_index),
-             # x = reorder(dpto_label, -mpi_rate),
+  ggplot(aes(# x = reorder(dpto_label, informality_index),
+             x = reorder(dpto_label, -mpi_rate),
              mpi_rate*100)) +
   
   geom_col(aes(fill = informality_index)) +
   geom_text(aes(label = round(informality_index, 1)), nudge_y = 3) +
   
   labs(x = "Department",
-       y = "Poverty rate (%)",
+       y = "Poverty Rate (%)",
        subtitle = "Note: numeric labels above the bars show the average informality index of each department",
        fill = 'Informality') +
   custom_theme() +
