@@ -50,7 +50,6 @@ custom_theme <- function() {
       legend.text = element_text(size = 13)
       
       
-      
     )
 }
 
