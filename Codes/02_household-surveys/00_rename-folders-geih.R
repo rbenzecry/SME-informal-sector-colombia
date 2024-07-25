@@ -11,7 +11,7 @@ rm(list = ls())
 
 # NOTE: This script must be run at the beginnig simply after extracting
 # the data from the zip file 'GEIH_2022_Marco_2018.zip'. 
-# It renames the directories to the month namesm no need to do it manually.
+# It renames the directories to the month names, no need to do it manually.
 
 # FUNCTIONS ---------------------------------------------------------------
 

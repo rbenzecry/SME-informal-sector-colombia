@@ -1,6 +1,6 @@
 
-rm(list = ls())
-source("00_settings.R")
+# rm(list = ls())
+source("Codes/00_settings.R")
 
 # DATA --------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ emicron <- emicron %>%
            (mpi_edu_attend + mpi_child_labour)*0.1 +
            (mpi_health_ss)*0.2,
          
-         # Same weight for all indicators = percentage of deprivations
+         # Same weight for all indicators, i.e. percentage of deprivations
          mpi_deprivations = (mpi_water + mpi_excrete + mpi_floor + mpi_walls + mpi_overcrowding +
                                mpi_eco_dep + mpi_inf_work + 
                                mpi_edu_years + mpi_literacy + 
@@ -193,6 +193,6 @@ table(is.na(emicron$foreigner))
 
 # EXPORT ------------------------------------------------------------------
 
-write_dta(emicron, "Tables/emicron-informality-mpi.dta")
+write_dta(emicron, "Tables/03_emicron-informality-mpi.dta")
 
 # -------------------------------------------------------------------------

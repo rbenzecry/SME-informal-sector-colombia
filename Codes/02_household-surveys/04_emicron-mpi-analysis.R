@@ -3,11 +3,12 @@ source("00_settings.R")
 
 # DATA --------------------------------------------------------------------
 
-emicron_mpi <- read_dta("Tables/emicron-informality-mpi.dta")
+emicron_mpi <- read_dta("Tables/03_emicron-informality-mpi.dta")
 
 emicron_models <- read.csv("Tables/01_emicron/emicron_models.csv")
 
 # Import department names
+#### MODIFY TO READ THE OROGINAL SHEET, DELETE THE HEADERS AND JUST KEEP THE GEO CODES
 geo_code_labels <- read_excel("Data/GEIH-2023/DICCIONARIO_DATOS_BASES_ANONIMIZADAS_GEIH_2023.xlsx",
                               sheet = "geo_codes")
 

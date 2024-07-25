@@ -1,22 +1,10 @@
 
-library(tidyverse)
-library(readxl)
-library(haven)
-library(janitor)
-library(data.table)
-library(sjlabelled)
-library(sjPlot)
+# This script renames all the folders extracted from the zip file 'GEIH_2022_Marco_2018.zip' 
+source('Codes/02_household-surveys/00_rename-folders-geih.R')
 
-rm(list = ls())
 
-# DATA --------------------------------------------------------------------
-
-months <- c("Enero", "Febrero", "Marzo", "Abril",
-            "Mayo", "Junio", "Julio", "Agosto", 
-            "Septiembre", "Octubre", "Noviembre", "Diciembre")
-
-survey_year <- "2022"
-initial_dir <- paste0("Data/GEIH-", survey_year, "/")
+# Update initial dir
+initial_dir <- paste0(initial_dir, '/')
 
 # Get names of all modules
 all_modules <- list.files(paste0(initial_dir, "Enero/DTA"))
@@ -36,7 +24,7 @@ export_files <- c("individual",
                   "research-type")
 
 # Full paths to export
-export_paths <- paste("Tables/02_household-surveys/",
+export_paths <- paste("Outputs/02_household-surveys/",
                       export_files,
                       "_geih-", survey_year,
                       "-clean.dta", sep = "")
@@ -58,16 +46,6 @@ for (n in 1:length(final_dir)){
   
   
   # SET UP ------------------------------------------------------------------
-  
-  
-  # Determine common columns across all months:
-  # (1) Sapply gets the dimensions of each data set, (2) the second row has the number of columns, 
-  # (3) we extract the index of the data frame in the list and use it to just take the columns that
-  # appear en every dataset
-  # i_min <- which.min(sapply(list_data, dim)[2,])
-  # common_cols <- colnames(list_data$Enero)[(colnames(list_data$Enero) %in% colnames(list_data[[i_min]]))]
-  # # Specific removal
-  # common_cols <- setdiff(common_cols, "pt")
   
   # Take the intersection of all columns
   common_cols <- Reduce(intersect, lapply(list_data, colnames))
