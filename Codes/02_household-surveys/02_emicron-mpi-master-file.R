@@ -4,7 +4,7 @@ source("Codes/00_settings.R")
 
 # DATA --------------------------------------------------------------------
 
-emicron <- read.csv("Tables/01_emicron/emicron_index.csv") %>% 
+emicron <- read.csv("Outputs/01_emicron/emicron_index.csv") %>% 
 
 # SET UP ------------------------------------------------------------------
 
@@ -44,16 +44,16 @@ id_cols <- c("id_house", "adj_weight",
 # MPI INDICATORS ----------------------------------------------------------
 
 # Housing and services dimension
-source("02_household-surveys/00_house-and-services-mpi-2022.R")
+source("Codes/02_household-surveys/00_house-and-services-mpi-2022.R")
 
 # Labour dimension
-source("02_household-surveys/00_labour-mpi-2022.R")
+source("Codes/02_household-surveys/00_labour-mpi-2022.R")
 
 # Education and health dimensions
-source("02_household-surveys/00_education-health-mpi-2022.R")
+source("Codes/02_household-surveys/00_education-health-mpi-2022.R")
 
 # Add basic migrant variables
-source("02_household-surveys/00_migration-emicron-2022.R")
+source("Codes/02_household-surveys/00_migration-emicron-2022.R")
 
 # JOIN DATA SETS ----------------------------------------------------------
 
@@ -193,6 +193,6 @@ table(is.na(emicron$foreigner))
 
 # EXPORT ------------------------------------------------------------------
 
-write_dta(emicron, "Tables/03_emicron-informality-mpi.dta")
+write_dta(emicron, "Outputs/03_emicron-informality-mpi.dta")
 
 # -------------------------------------------------------------------------
