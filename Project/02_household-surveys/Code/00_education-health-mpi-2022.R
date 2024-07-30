@@ -55,11 +55,7 @@ individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.d
          edu_years_adult = ifelse(age >= 15,
                                   yes = edu_years, no = NA),
          
-         illiterate = as.numeric(age >= 15 & literacy == 2),
-         
-         school_lag = ifelse(age >= 7 & age <= 17,
-                             yes = edu_years < (age - 6), 
-                             no = NA)) %>%
+         illiterate = as.numeric(age >= 15 & literacy == 2)) %>%
   
   # Household ratios and deprivations
   group_by(id_house) %>% 
@@ -81,25 +77,37 @@ individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.d
   mutate(child_youth = as.numeric(age >= 6 & age <= 16),
          cy_edu_attend = ifelse(child_youth == 1 & edu_attendance == 2,
                                 yes = 1, no = 0),
+         
+         school_lag = ifelse(age >= 7 & age <= 17,
+                             yes = as.numeric(edu_years < (age - 6)), 
+                             no = NA),
+         
          child_labour = as.numeric(age >= 12 & age <= 17 &
                                      id_per %in% id_occupied)) %>% 
+  
   # Household ratios and deprivations
   group_by(id_house) %>% 
   
   mutate(edu_attend_ratio = ifelse(child_youth > 0,
                                    yes = sum(cy_edu_attend)/sum(child_youth),
                                    no = 0),
+         
+         hh_school_lag = ifelse(school_lag > 0,
+                                 yes = sum(school_lag, na.rm = T),
+                                 no = 0),
+         
          child_occupied = ifelse(child_labour > 0,
                                  yes = sum(child_labour, na.rm = T),
                                  no = 0),
          
          mpi_edu_attend = as.numeric(edu_attend_ratio > 0),
+         mpi_school_lag = as.numeric(hh_school_lag > 0),
          mpi_child_labour = as.numeric(child_occupied > 0)) %>% 
   
   ungroup() %>% 
   
   # Create the summary index for the children and youth dimension
-  mutate(mpi_cy = (mpi_edu_attend + mpi_child_labour) / 2) %>% 
+  mutate(mpi_cy = (mpi_edu_attend + mpi_school_lag + mpi_child_labour) / 3) %>% 
   
   
        

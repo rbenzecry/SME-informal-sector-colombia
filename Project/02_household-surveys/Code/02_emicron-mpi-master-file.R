@@ -66,14 +66,14 @@ emicron <- emicron %>%
   mutate(mpi_index = (mpi_water + mpi_excrete + mpi_floor + mpi_walls + mpi_overcrowding)*0.04 + 
            (mpi_eco_dep + mpi_inf_work)*0.1 + 
            (mpi_edu_years + mpi_literacy)*0.1 + 
-           (mpi_edu_attend + mpi_child_labour)*0.1 +
+           (mpi_edu_attend + mpi_school_lag + mpi_child_labour)*(0.2/3) +
            (mpi_health_ss)*0.2,
          
          # Same weight for all indicators, i.e. percentage of deprivations
          mpi_deprivations = (mpi_water + mpi_excrete + mpi_floor + mpi_walls + mpi_overcrowding +
                                mpi_eco_dep + mpi_inf_work + 
                                mpi_edu_years + mpi_literacy + 
-                               mpi_edu_attend + mpi_child_labour +
+                               mpi_edu_attend + mpi_school_lag + mpi_child_labour +
                                mpi_health_ss) / 12,
                            
          # Binary variable of poverty: 1 means POOR 
@@ -110,6 +110,7 @@ emicron <- emicron %>%
          "mpi_education",
          # Children and youth
          "mpi_edu_attend", 
+         "mpi_school_lag",
          "mpi_child_labour",
          "mpi_cy",
          # Health
