@@ -156,7 +156,8 @@ emicron <- emicron %>%
          "health_ss", 
          
          "child_youth", 
-         "cy_edu_attend", 
+         "cy_edu_attend",
+         "school_lag",
          "child_labour",
          
          "poor_health_ss", 
