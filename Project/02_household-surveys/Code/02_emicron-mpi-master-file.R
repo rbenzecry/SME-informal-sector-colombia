@@ -195,6 +195,6 @@ table(is.na(emicron$foreigner))
 
 # EXPORT ------------------------------------------------------------------
 
-write_dta(emicron, "Outputs/03_emicron-informality-mpi.dta")
+write_dta(emicron, "Outputs/02_emicron-informality-mpi.dta")
 
 # -------------------------------------------------------------------------
