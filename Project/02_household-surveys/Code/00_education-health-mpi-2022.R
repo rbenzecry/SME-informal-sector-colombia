@@ -55,7 +55,11 @@ individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.d
          edu_years_adult = ifelse(age >= 15,
                                   yes = edu_years, no = NA),
          
-         illiterate = as.numeric(age >= 15 & literacy == 2)) %>%
+         illiterate = as.numeric(age >= 15 & literacy == 2),
+         
+         school_lag = ifelse(age >= 7 & age <= 17,
+                             yes = edu_years < (age - 6), 
+                             no = NA)) %>%
   
   # Household ratios and deprivations
   group_by(id_house) %>% 
