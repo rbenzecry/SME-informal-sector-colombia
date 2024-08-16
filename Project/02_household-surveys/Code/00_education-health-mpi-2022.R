@@ -2,7 +2,7 @@
 # DATA --------------------------------------------------------------------
 
 # Individual level module
-individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.dta") %>% 
+individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.dta") %>% 
                            # n_max = 10^4)
 
 
@@ -22,6 +22,8 @@ individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.d
          age = P6040,
          literacy = P6160,
          edu_level = P3042,
+         # Last year or semester
+         edu_last_grade = P3042S1,
          edu_highest_degree = P3043,
          edu_attendance = P6170,
          
@@ -30,28 +32,61 @@ individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.d
 # EDUCATION ---------------------------------------------------------------
 
   # CHECK IF CORRECTION IS NEEDED WITH EDU LEVEL VARIABLE !!!
-  mutate(edu_years = case_when(edu_highest_degree == 1 ~ 0,
-                               
-                               is.na(edu_highest_degree) & edu_level == 1 ~ 0,
-                               is.na(edu_highest_degree) & edu_level == 2 ~ 0,
-                               is.na(edu_highest_degree) & edu_level == 99 ~ 0,
-                               
-                               is.na(edu_highest_degree) & edu_level == 3 ~ 6,
-                               is.na(edu_highest_degree) & edu_level == 4 ~ 6,
-                               
-                               edu_highest_degree == 2 ~ 11,
-                               edu_highest_degree == 3 ~ 12,
-                               edu_highest_degree == 4 ~ 13,
-                               
-                               edu_highest_degree == 5 ~ 14,
-                               edu_highest_degree == 6 ~ 14,
-                               
-                               edu_highest_degree == 7 ~ 15,
-                               edu_highest_degree == 8 ~ 17,
-                               edu_highest_degree == 9 ~ 17,
-                               edu_highest_degree == 10 ~ 20,
-                               TRUE~NA),
+  mutate(edu_years_degree = case_when(edu_highest_degree == 1 ~ 0,
+                                      
+                                      is.na(edu_highest_degree) & edu_level == 1 ~ 0,
+                                      is.na(edu_highest_degree) & edu_level == 2 ~ 0,
+                                      is.na(edu_highest_degree) & edu_level == 99 ~ 0,
+                                      
+                                      is.na(edu_highest_degree) & edu_level == 3 ~ 6,
+                                      is.na(edu_highest_degree) & edu_level == 4 ~ 6,
+                                      
+                                      edu_highest_degree == 2 ~ 11,
+                                      edu_highest_degree == 3 ~ 12,
+                                      edu_highest_degree == 4 ~ 13,
+                                      
+                                      edu_highest_degree == 5 ~ 14,
+                                      edu_highest_degree == 6 ~ 14,
+                                      
+                                      edu_highest_degree == 7 ~ 15,
+                                      edu_highest_degree == 8 ~ 17,
+                                      edu_highest_degree == 9 ~ 17,
+                                      edu_highest_degree == 10 ~ 20,
+                                      TRUE~NA),
          
+         edu_years = case_when(edu_level == 1 ~ 0,
+                               
+                               # Pre-school
+                               edu_level == 2 ~ edu_last_grade,
+                               
+                               # Primary (+1 year for the year of pre-school ????)
+                               edu_level == 3 ~ edu_last_grade + 1,
+                               # Middle
+                               edu_level == 4 ~ edu_last_grade + 5 + 1,
+                               # High
+                               edu_level == 5 ~ edu_last_grade + 9 + 1,
+                               # Techincal high school (media tecnica)
+                               edu_level == 6 ~ edu_last_grade + 9 + 1,
+                               
+                               # Normalista (educator?)
+                               edu_level == 7 ~ edu_last_grade + 11 + 1,
+                               
+                               # Professional technical
+                               edu_level == 8 ~ edu_last_grade/2 + 11 + 1,
+                               
+                               # Technological
+                               edu_level == 9 ~ edu_last_grade/2 + 11 + 1,
+                               
+                               # Universitary. If the last grade value is higher than 10, 
+                               # we assume it is measured in quarters (trimestres)
+                               edu_level == 10 & edu_last_grade <= 10 ~ edu_last_grade/2 + 11 + 1,
+                               edu_level == 10 & edu_last_grade > 10 ~ edu_last_grade/3 + 11 + 1,
+                               
+                               # Especialisation, master's, PhD
+                               # Shoul we assume PhD's have a master's too?????
+                               edu_level %in% c(11, 12, 13) ~ edu_last_grade/2 + 5 + 11 + 1,
+                               TRUE~NA),
+                               
          edu_years_adult = ifelse(age >= 15,
                                   yes = edu_years, no = NA),
          
@@ -129,3 +164,37 @@ individual <- read_dta("Tables/02_household-surveys/individual_geih-2022-clean.d
   select(-c("PERIODO", "MES", "HOGAR", "CLASE"))
                             
 # -------------------------------------------------------------------------
+
+
+individual %>% 
+  ggplot() +
+  geom_histogram(aes(edu_years_adult),
+                 fill = 'lightblue', col = 'midnightblue') +
+  xlim(0, 25) +
+  custom_theme()
+
+individual %>% 
+  ggplot() +
+  geom_histogram(aes(edu_years_degree),
+                 fill = 'lightblue', col = 'midnightblue') +
+  xlim(0, 25) +
+  custom_theme()
+
+
+# Check variable values
+table(individual$edu_level, individual$edu_last_grade)
+
+# Histogram universitaria
+individual %>% 
+  filter(edu_level == 10) %>%
+  ggplot() +
+  geom_histogram(aes(edu_last_grade)) +
+  custom_theme()
+
+
+
+table(individual$edu_level, individual$edu_highest_degree)
+
+
+
+
