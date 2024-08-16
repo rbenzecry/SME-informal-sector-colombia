@@ -1,22 +1,37 @@
 
-source("00_settings.R")
+source("Project/00_settings.R")
 
 # DATA --------------------------------------------------------------------
 
-emicron_mpi <- read_dta("Tables/03_emicron-informality-mpi.dta")
+emicron_mpi <- read_dta("Outputs/02_emicron-informality-mpi.dta")
 
-emicron_models <- read.csv("Tables/01_emicron/emicron_models.csv")
+emicron_models <- read.csv("Outputs/01_emicron/emicron_models.csv")
 
 # Import department names
-#### MODIFY TO READ THE OROGINAL SHEET, DELETE THE HEADERS AND JUST KEEP THE GEO CODES
-geo_code_labels <- read_excel("Data/GEIH-2023/DICCIONARIO_DATOS_BASES_ANONIMIZADAS_GEIH_2023.xlsx",
-                              sheet = "geo_codes")
+dictionary <- read_excel("Data/DICCIONARIO_DATOS_BASES_ANONIMIZADAS_GEIH_2023.xlsx",
+                         sheet = "Diccionario de datos")
 
 
 # SET UP ------------------------------------------------------------------
 
+
+# Clean dictionary to keep geo codes
+geo_code_labels <- dictionary %>% 
+  clean_names() %>% 
+  # Fill NA values with the last non-NA value (found above)
+  fill(id_de_la_variable, descipcion_de_la_variable, .direction = "down") %>% 
+  
+  filter(id_de_la_variable %in% c("DPTO", "AREA")) %>%
+  
+  # Clean variable names
+  select(geo_level = id_de_la_variable,
+         code = dominios_categorias_valores,
+         name = regla_de_validacion_en_lenguaje_natural) %>% 
+  distinct(.keep_all = T)
+
+# Keep only depto names
 dpto_names <- geo_code_labels %>% 
-  filter(abb == "dpto") %>% 
+  filter(geo_level == "DPTO") %>% 
   mutate(name = ifelse(name == 'NORTE DE SANTANDER', 
                        yes = 'N. SANTANDER', no = name))
 
