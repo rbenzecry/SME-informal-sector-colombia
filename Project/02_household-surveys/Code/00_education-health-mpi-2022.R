@@ -59,32 +59,33 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
                                # Pre-school
                                edu_level == 2 ~ edu_last_grade,
                                
-                               # Primary (+1 year for the year of pre-school ????)
-                               edu_level == 3 ~ edu_last_grade + 1,
+                               # Primary
+                               # Note: we don't add +1 for preschool because it's not necessarily universal in COL
+                               edu_level == 3 ~ edu_last_grade,
                                # Middle
-                               edu_level == 4 ~ edu_last_grade + 5 + 1,
+                               edu_level == 4 ~ edu_last_grade + 5,
                                # High
-                               edu_level == 5 ~ edu_last_grade + 9 + 1,
+                               edu_level == 5 ~ edu_last_grade + 9,
                                # Techincal high school (media tecnica)
-                               edu_level == 6 ~ edu_last_grade + 9 + 1,
+                               edu_level == 6 ~ edu_last_grade + 9,
                                
                                # Normalista (educator?)
-                               edu_level == 7 ~ edu_last_grade + 11 + 1,
+                               edu_level == 7 ~ edu_last_grade + 11,
                                
                                # Professional technical
-                               edu_level == 8 ~ edu_last_grade/2 + 11 + 1,
+                               edu_level == 8 ~ edu_last_grade/2 + 11,
                                
                                # Technological
-                               edu_level == 9 ~ edu_last_grade/2 + 11 + 1,
+                               edu_level == 9 ~ edu_last_grade/2 + 11,
                                
                                # Universitary. If the last grade value is higher than 10, 
                                # we assume it is measured in quarters (trimestres)
-                               edu_level == 10 & edu_last_grade <= 10 ~ edu_last_grade/2 + 11 + 1,
-                               edu_level == 10 & edu_last_grade > 10 ~ edu_last_grade/3 + 11 + 1,
+                               edu_level == 10 & edu_last_grade <= 10 ~ edu_last_grade/2 + 11,
+                               edu_level == 10 & edu_last_grade > 10 ~ edu_last_grade/3 + 11,
                                
                                # Especialisation, master's, PhD
                                # Shoul we assume PhD's have a master's too?????
-                               edu_level %in% c(11, 12, 13) ~ edu_last_grade/2 + 5 + 11 + 1,
+                               edu_level %in% c(11, 12, 13) ~ edu_last_grade/2 + 5 + 11,
                                TRUE~NA),
                                
          edu_years_adult = ifelse(age >= 15,
