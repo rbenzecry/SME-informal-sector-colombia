@@ -2,7 +2,7 @@
 # DATA --------------------------------------------------------------------
 
 # Household level module
-household <- read_dta("Tables/02_household-surveys/household_geih-2022-clean.dta",
+household <- read_dta("Outputs/02_household-surveys/household_geih-2022-clean.dta",
                           col_select = c(all_of(id_cols),
                                          "P6008",
                                          "P4030S5",
