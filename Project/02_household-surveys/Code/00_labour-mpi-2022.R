@@ -2,14 +2,14 @@
 # DATA --------------------------------------------------------------------
 
 # Occupied module
-occupied <- read_dta("Tables/02_household-surveys/occupied_geih-2022-clean.dta",
+occupied <- read_dta("Outputs/02_household-surveys/occupied_geih-2022-clean.dta",
                      col_select = c(all_of(id_cols),
                                     "ORDEN",
                                     "P6920"))
 
                                         
 # Labour force/workforce module
-labour_force <- read_dta("Tables/02_household-surveys/workforce_geih-2022-clean.dta",
+labour_force <- read_dta("Outputs/02_household-surveys/workforce_geih-2022-clean.dta",
                          col_select = c(all_of(id_cols), 
                                         "ORDEN",
                                         "P6240"))

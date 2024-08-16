@@ -1,6 +1,6 @@
 
 # rm(list = ls())
-source("Codes/00_settings.R")
+source("Project/00_settings.R")
 
 # DATA --------------------------------------------------------------------
 
@@ -44,16 +44,16 @@ id_cols <- c("id_house", "adj_weight",
 # MPI INDICATORS ----------------------------------------------------------
 
 # Housing and services dimension
-source("Codes/02_household-surveys/00_house-and-services-mpi-2022.R")
+source("Project/02_household-surveys/Code/00_house-and-services-mpi-2022.R")
 
 # Labour dimension
-source("Codes/02_household-surveys/00_labour-mpi-2022.R")
+source("Project/02_household-surveys/Code/00_labour-mpi-2022.R")
 
 # Education and health dimensions
-source("Codes/02_household-surveys/00_education-health-mpi-2022.R")
+source("Project/02_household-surveys/Code/00_education-health-mpi-2022.R")
 
 # Add basic migrant variables
-source("Codes/02_household-surveys/00_migration-emicron-2022.R")
+source("Project/02_household-surveys/Code/00_migration-emicron-2022.R")
 
 # JOIN DATA SETS ----------------------------------------------------------
 

@@ -4,7 +4,7 @@
 
 venezuela_code <- 862
 
-migration <- read_dta("Tables/02_household-surveys/migration_geih-2022-clean.dta") %>% 
+migration <- read_dta("Outputs/02_household-surveys/migration_geih-2022-clean.dta") %>% 
  
 # SET UP ------------------------------------------------------------------
 
