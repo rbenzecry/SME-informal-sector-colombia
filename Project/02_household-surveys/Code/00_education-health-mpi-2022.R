@@ -106,6 +106,19 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
   
   # Create the summary index for the education dimension
   mutate(mpi_education = (mpi_edu_years + mpi_literacy) / 2) %>% 
+
+# HEALTH ------------------------------------------------------------------
+
+  # Above 5 yrs old and without health insurance
+  mutate(poor_health_ss = ifelse(age > 5 & health_ss == 2,
+                               yes = 1, no = 0)) %>% 
+  
+  # Household ratios and deprivations
+  group_by(id_house) %>% 
+  mutate(health_ss_ratio = mean(poor_health_ss, na.rm = T),
+         
+         mpi_health_ss = as.numeric(health_ss_ratio > 0)) %>% 
+  ungroup() %>% 
   
   
 # CHILDREN AND YOUTH ------------------------------------------------------
@@ -116,10 +129,13 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
          
          school_lag = ifelse(age >= 7 & age <= 17,
                              yes = as.numeric(edu_years < (age - 6)), 
-                             no = NA),
+                             # If there are no children between these ages, we set it to 0
+                             no = 0),
          
-         care_barriers = ifelse(age <= 5 & health_ss == 2,
-                                yes = 1, no = 0),
+         child_health = ifelse(age <= 5 & mpi_health_ss == 1,
+                               yes = 1, no = 0),
+         child_care = ifelse(age <= 5 & edu_attendance == 2,
+                             yes = 1, no = 0),
          
          child_labour = as.numeric(age >= 12 & age <= 17 &
                                      id_per %in% id_occupied)) %>% 
@@ -138,6 +154,9 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
          child_occupied = ifelse(child_labour > 0,
                                  yes = sum(child_labour, na.rm = T),
                                  no = 0),
+         care_barriers = ifelse(child_health > 0 | child_care > 0,
+                               yes = 1, no = 0),
+         
          
          mpi_edu_attend = as.numeric(edu_attend_ratio > 0),
          mpi_school_lag = as.numeric(hh_school_lag > 0),
@@ -148,22 +167,6 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
   
   # Create the summary index for the children and youth dimension
   mutate(mpi_cy = (mpi_edu_attend + mpi_school_lag + mpi_child_labour + mpi_care_barriers) / 4) %>% 
-  
-  
-       
-# HEALTH ------------------------------------------------------------------
-
-  # Above 5 yrs old and without health insurance
-  mutate(poor_health_ss = ifelse(age > 5 & health_ss == 2,
-                                 yes = 1, no = 0)) %>% 
-  
-  # Household ratios and deprivations
-  group_by(id_house) %>% 
-  mutate(health_ss_ratio = mean(poor_health_ss, na.rm = T),
-         
-         mpi_health_ss = as.numeric(health_ss_ratio > 0)) %>% 
-  ungroup() %>% 
-  
   
   # Drop problematic columns
   select(-c("PERIODO", "MES", "HOGAR", "CLASE"))
