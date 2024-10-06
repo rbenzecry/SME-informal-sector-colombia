@@ -66,7 +66,7 @@ emicron <- emicron %>%
   mutate(mpi_index = (mpi_water + mpi_excrete + mpi_floor + mpi_walls + mpi_overcrowding)*0.04 + 
            (mpi_eco_dep + mpi_inf_work)*0.1 + 
            (mpi_edu_years + mpi_literacy)*0.1 + 
-           (mpi_edu_attend + mpi_school_lag + mpi_child_labour)*(0.2/3) +
+           (mpi_edu_attend + mpi_school_lag + mpi_care_barriers + mpi_child_labour)*(0.05) +
            (mpi_health_ss)*0.2,
          
          # Same weight for all indicators, i.e. percentage of deprivations
@@ -111,6 +111,7 @@ emicron <- emicron %>%
          # Children and youth
          "mpi_edu_attend", 
          "mpi_school_lag",
+         "mpi_care_barriers",
          "mpi_child_labour",
          "mpi_cy",
          # Health
@@ -158,6 +159,7 @@ emicron <- emicron %>%
          "child_youth", 
          "cy_edu_attend",
          "school_lag",
+         "care_barriers",
          "child_labour",
          
          "poor_health_ss", 
