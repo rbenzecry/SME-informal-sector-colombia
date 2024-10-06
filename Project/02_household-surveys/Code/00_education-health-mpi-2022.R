@@ -118,6 +118,9 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
                              yes = as.numeric(edu_years < (age - 6)), 
                              no = NA),
          
+         care_barriers = ifelse(age <= 5 & health_ss == 2,
+                                yes = 1, no = 0),
+         
          child_labour = as.numeric(age >= 12 & age <= 17 &
                                      id_per %in% id_occupied)) %>% 
   
@@ -138,12 +141,13 @@ individual <- read_dta("Outputs/02_household-surveys/individual_geih-2022-clean.
          
          mpi_edu_attend = as.numeric(edu_attend_ratio > 0),
          mpi_school_lag = as.numeric(hh_school_lag > 0),
+         mpi_care_barriers = as.numeric(care_barriers > 0),
          mpi_child_labour = as.numeric(child_occupied > 0)) %>% 
   
   ungroup() %>% 
   
   # Create the summary index for the children and youth dimension
-  mutate(mpi_cy = (mpi_edu_attend + mpi_school_lag + mpi_child_labour) / 3) %>% 
+  mutate(mpi_cy = (mpi_edu_attend + mpi_school_lag + mpi_child_labour + mpi_care_barriers) / 4) %>% 
   
   
        
