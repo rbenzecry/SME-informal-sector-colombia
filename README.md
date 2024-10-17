@@ -12,40 +12,53 @@ Authors:
 * Angelo Leone
 * Betzabe Soria Rodriguez
 
-### Folders, scripts and Outputs structure
+**_THE INFORMATION BELOW IS NOT UPDATED_** 
 
-We should all share a folder structure to avoid issues when trying to reproduce or continue a code from someone else.
+### Folder structure
 
 The folder where you copy the repository must follow the OneDrive structure and have the following folders:
 * Data: all the raw data and inputs used/to use
   - Emicron-2022
   - GEIH-2022
-* Docs
-* Literature
-* Outputs: intermediate outputs, processed databases, summary tables and so forth
-  - 01_emicron
-  - 02_household-surveys
+* Code: all the code files divided into sections
 * Plots: all the plots exported
-* Presentation
   
 Enumerate the codes and folders in a consistent way. All sub-folders, scripts and output databases and tables should have a two-digit code indicating the order and identifying the script that generate it. The enumeration must take into account "chronological" order, meaning if script X should be run _before_ script Y, names should be 01_X and 02_Y. 
 
-Example: 
+### Instructions for replication
 
-  Scripts: "01_initial-settings.py", "02_clean-survey-data.py", "03_migrant-profile.py".
+Explain how to get the results:
+1. import necessary data into right folder
+2. run scripts in order
+  2.1 no need to run the 00_ scripts
+  2.2 for info on what each script does and input/output, visit [...]
+3. intermediate data files and plots will be stored into respective folders 
 
-  Output dataset: "03_summary-migrant-profile-region.xlsx"
-  
-**_THE INFORMATION BELOW IS NOT UPDATED_**  
+#### Data
+Please move the following files to the 'Data' folder inside 'Project':
+From Emicron:
+- "Módulo de identificación.csv",
+- "Módulo de capital social.csv",
+- "Módulo de características del micronegocio.csv",
+- "Módulo de costos, gastos y activos.csv",
+- "Módulo de emprendimiento.csv",
+- "Módulo de inclusión financiera.csv",
+- "Módulo de sitio o ubicación.csv",
+- "Módulo de TIC.csv",
+- "Módulo de ventas o ingresos.csv",
+- "Módulo personal ocupado (propietario(a)).csv"
+From GEIH:
+- DICCIONARIO_DATOS_BASES_ANONIMIZADAS_GEIH_2023.xlsx
+- Unzipped version of the folder GEIH_2022_Marco_2018.zip
 
-
-
-### 01 - Microbusinesses survey
+#### 01 - Microbusinesses survey
 Folder: 01_emicron
 
-In the data folder, have another folder called: 01_to_import. Plus, have the file emicron_clean.csv which can be downloaded by running the file 01_cleaning-data-undp.ipynb.
+Explain what this section is about and include notebook descriptions.
 
-### 02 - Household surveys
+Include link to source of Emicron data.
+
+#### 02 - Household surveys
 
 Folder: 02_household-surveys
 
@@ -57,12 +70,7 @@ Historic data from:
 DANE. Gran Encuesta Integrada de Hogares - GEIH
 (https://www.datos.gov.co/Estad-sticas-Nacionales/Gran-Encuesta-Integrada-de-Hogares-GEIH/mcpt-3dws/about_data)
 
-GEIH 2023:
-
-https://microdatos.dane.gov.co/index.php/catalog/782/get-microdata
-
 GEIH 2022:
-
 https://microdatos.dane.gov.co/index.php/catalog/771/get-microdata
 
 **Scripts**
@@ -87,3 +95,6 @@ _*Note: scripts starting with `00` are not meant to run individually, they are u
   
   _TO BE CONTINUED._
 
+#### 03 - Clustering
+
+Explain goal of this section and content of the notebooks here.
