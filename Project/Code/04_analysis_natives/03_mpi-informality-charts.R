@@ -79,8 +79,8 @@ p_mpi_dpto <- emicron_mpi %>%
   
   labs(x = "Department",
        y = "Poverty Rate (%)",
-       subtitle = "Note: numeric labels above the bars show the average informality index of each department",
-       fill = 'Informality') +
+       subtitle = "Note: numeric labels above the bars show the average formality index of each department",
+       fill = 'Formality') +
   custom_theme() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         plot.caption = element_text(hjust = 0))
@@ -103,9 +103,9 @@ p_scatter_mpi_ii <- emicron_mpi %>%
   scale_size_continuous(range = c(1, 10)) +
   
   labs(x = "Poverty rate (%)",
-       y = "Avg. Informality Index",
+       y = "Avg. Formality Index",
        title = "Higher poverty is related to lower levels of formality",
-       subtitle = "Multidimensional Poverty and Avg. Informality Index, by department",
+       subtitle = "Multidimensional Poverty and Avg. Formality Index, by department",
        size = 'Population (k)') +
   custom_theme()+
   theme(legend.position = 'top')
@@ -130,9 +130,9 @@ panel_mpi_ii <- emicron_mpi %>%
   
   # Add labels
   labs(x = "Multidimensional Poverty Index (inverted)",
-       y = "Informality Index",
+       y = "Formality Index",
        title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
-       subtitle = "Informality and Muldimensional Poverty") +
+       subtitle = "Formality and Muldimensional Poverty") +
   custom_theme() +
   theme(legend.position = "none")
 
@@ -146,7 +146,7 @@ p_rates_clusters <- emicron_mpi %>%
   summarise(informality_index = weighted.mean(II, F_EXP, na.rm = T),
             mpi_rate = weighted.mean(mpi_poor, F_EXP, na.rm = T),
             n_pop = sum(F_EXP, na.rm = T)/10^3) %>%
-  mutate(cluster_interest = as.factor(case_when(cluster == 6 ~ 1,
+  mutate(cluster_interest = as.factor(case_when(cluster == 5 ~ 1,
                                                 # cluster == 6 ~ 0.5,
                                                 TRUE~0))) %>% 
   ungroup() %>% 
@@ -168,9 +168,9 @@ p_rates_clusters <- emicron_mpi %>%
   
   # Add labels
   labs(x = "Multidimensional Poverty Rate (inverted)",
-       y = "Avg. Informality Index",
+       y = "Avg. Formality Index",
        title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
-       subtitle = "Informality and Muldimensional Poverty") +
+       subtitle = "Formality and Muldimensional Poverty") +
   custom_theme() +
   theme(legend.position = "none")
 
@@ -179,7 +179,7 @@ p_rates_clusters <- emicron_mpi %>%
 # 5. Panel MPI vs II selected clusters ------------------------------------
 
 p_panel_clusters <- emicron_mpi %>%
-  mutate(cluster_interest = as.factor(case_when(cluster == 6 ~ 1,
+  mutate(cluster_interest = as.factor(case_when(cluster == 5 ~ 1,
                                                 # cluster == 6 ~ 0.5,
                                                 TRUE~0))) %>%
   
@@ -187,7 +187,7 @@ p_panel_clusters <- emicron_mpi %>%
   geom_jitter(aes(alpha = F_EXP, col = cluster_interest),
               height = 0.1, width = 0.01) +
   # To bring to the front because the cluster has a small number of obs
-  geom_jitter(data = filter(emicron_mpi, cluster == 6),
+  geom_jitter(data = filter(emicron_mpi, cluster == 5),
               aes(alpha = F_EXP), col = 'darkgreen',
               height = 0.1, width = 0.01) +
   
@@ -200,9 +200,9 @@ p_panel_clusters <- emicron_mpi %>%
   
   # Add labels
   labs(x = "Multidimensional Poverty Index (inverted)",
-       y = "Informality Index",
+       y = "Formality Index",
        title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
-       subtitle = "Informality and Muldimensional Poverty, selected clusters") +
+       subtitle = "Formality and Muldimensional Poverty, selected clusters") +
   custom_theme() +
   theme(legend.position = "none")
 

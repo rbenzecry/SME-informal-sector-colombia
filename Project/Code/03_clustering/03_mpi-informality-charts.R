@@ -79,8 +79,8 @@ p_mpi_dpto <- emicron_mpi %>%
   
   labs(x = "Department",
        y = "Poverty Rate (%)",
-       subtitle = "Note: numeric labels above the bars show the average informality index of each department",
-       fill = 'Informality') +
+       subtitle = "Note: numeric labels above the bars show the average formality index of each department",
+       fill = 'Formality') +
   custom_theme() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1),
         plot.caption = element_text(hjust = 0))
@@ -103,9 +103,9 @@ p_scatter_mpi_ii <- emicron_mpi %>%
   scale_size_continuous(range = c(1, 10)) +
   
   labs(x = "Poverty rate (%)",
-       y = "Avg. Informality Index",
+       y = "Avg. Formality Index",
        title = "Higher poverty is related to lower levels of formality",
-       subtitle = "Multidimensional Poverty and Avg. Informality Index, by department",
+       subtitle = "Multidimensional Poverty and Avg. Formality Index, by department",
        size = 'Population (k)') +
   custom_theme()+
   theme(legend.position = 'top')
@@ -130,9 +130,9 @@ panel_mpi_ii <- emicron_mpi %>%
   
   # Add labels
   labs(x = "Multidimensional Poverty Index (inverted)",
-       y = "Informality Index",
+       y = "Formality Index",
        title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
-       subtitle = "Informality and Muldimensional Poverty") +
+       subtitle = "Formality and Muldimensional Poverty") +
   custom_theme() +
   theme(legend.position = "none")
 
@@ -164,13 +164,13 @@ p_rates_clusters <- emicron_mpi %>%
   geom_hline(aes(yintercept = national_avg_infor)) +
   
   scale_x_reverse() +
-  scale_color_manual(values = c('gray', 'midnightblue', 'darkgreen')) +
+  scale_color_manual(values = c('gray', 'darkgreen', 'midnightblue')) +
   
   # Add labels
   labs(x = "Multidimensional Poverty Rate (inverted)",
-       y = "Avg. Informality Index",
+       y = "Avg. Formality Index",
        title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
-       subtitle = "Informality and Muldimensional Poverty") +
+       subtitle = "Formality and Muldimensional Poverty") +
   custom_theme() +
   theme(legend.position = "none")
 
@@ -201,9 +201,9 @@ p_panel_clusters <- emicron_mpi %>%
   
   # Add labels
   labs(x = "Multidimensional Poverty Index (inverted)",
-       y = "Informality Index",
+       y = "Formality Index",
        title = "Microbusiness owners are spread across the space, except for the poor and formal quadrant...",
-       subtitle = "Informality and Muldimensional Poverty, selected clusters") +
+       subtitle = "Formality and Muldimensional Poverty, selected clusters") +
   custom_theme() +
   theme(legend.position = "none")
 
