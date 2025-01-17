@@ -48,7 +48,7 @@ GEIH 2022: https://microdatos.dane.gov.co/index.php/catalog/771/get-microdata
 
 All code files are listed and described in the `Notebook Dictionary.xlsx` file. Subfolders and code are organized chronologically to ensure proper execution order:
 
-_*Note: scripts starting with `00` are not meant to run individually, they are used with the `source` function in another script. For example, the `03_emicron-mpi-master-file.R` calls the `00` scripts for the construction of the multidimensional poverty index (MPI)._
+_Note: scripts starting with `00` are not meant to run individually, they are used with the `source` function in another script. For example, the `03_emicron-mpi-master-file.R` calls the `00` scripts for the construction of the multidimensional poverty index (MPI)._
 
 ##### 01 - Microbusinesses survey
 Folder: `01_emicron`
