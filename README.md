@@ -1,5 +1,5 @@
-# INFORMALITY AND MULTIDIMENSIONAL POVERTY IN COLOMBIA: 
-## A FRAMEWORK TO ANALYSE MICRO AND SMALL BUSINESSES
+# Informality and Multidimensional Poverty in Colombia: 
+## A Framework to Analyse Micro and Small Businesses
 
 PP422 WT Term - Group Final Project 
 
